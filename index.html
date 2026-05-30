@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Minnier Family — Uncle Jack's Royale Directory of Degenerates</title>
+<meta name="description" content="The Minnier family history — generations of the Minnier line, kept by Jack Minnier, Vietnam veteran and family historian." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     THE MINNIER LEGACY — palette locked from Aunt Molly's quilt
+     ============================================================ */
+  :root{
+    --cream:#F5F0E8;
+    --crimson:#8B1A2A;
+    --crimson-deep:#6E1320;
+    --navy:#1B3A5C;
+    --navy-deep:#122A44;
+    --gold:#C8922A;
+    --gold-soft:#E0B45E;
+    --parchment:#DDD0B8;
+    --ink:#2A2420;
+    --ink-soft:#5A5044;
+    --card:#FBF8F2;
+    --shadow:rgba(27,58,92,.16);
+
+    --font-display:"Playfair Display", Georgia, serif;
+    --font-body:"Lora", Georgia, serif;
+
+    --r:14px;
+    --maxw:1180px;
+    --tap:48px; /* minimum touch / click target */
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+  }
+
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:19px;            /* large + readable, per Jack's needs */
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  /* subtle parchment texture behind everything */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(200,146,42,.08), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(27,58,92,.06), transparent 60%),
+      var(--cream);
+  }
+
+  a{color:var(--crimson);text-underline-offset:3px}
+  img{max-width:100%;display:block}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+  h1,h2,h3,.display{font-family:var(--font-display);letter-spacing:.2px}
+
+  /* ---------- stitched divider (quilt thread) ---------- */
+  .stitch{
+    height:14px;width:100%;
+    background:
+      repeating-linear-gradient(90deg, var(--gold) 0 16px, transparent 16px 30px);
+    opacity:.55;
+    -webkit-mask:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+            mask:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  /* =====================  HEADER  ===================== */
+  header.site{
+    position:sticky;top:0;z-index:40;
+    background:rgba(245,240,232,.92);
+    backdrop-filter:saturate(140%) blur(6px);
+    border-bottom:2px solid var(--parchment);
+  }
+  .bar{display:flex;align-items:center;gap:18px;padding:12px 0;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;margin-right:auto}
+  .seal{
+    width:52px;height:52px;flex:0 0 52px;border-radius:50%;
+    display:grid;place-items:center;color:var(--cream);
+    background:
+      conic-gradient(from 0deg, var(--crimson) 0 18deg, var(--cream) 18deg 36deg) ;
+    box-shadow:0 0 0 3px var(--gold), 0 0 0 5px var(--navy);
+    position:relative;
+  }
+  .seal::after{content:"★";position:absolute;color:var(--gold);font-size:22px;text-shadow:0 1px 0 var(--navy-deep)}
+  .brand .name{font-family:var(--font-display);font-weight:900;font-size:1.5rem;line-height:1;color:var(--navy)}
+  .brand .sub{font-size:.82rem;color:var(--crimson);font-style:italic;font-family:var(--font-body)}
+
+  nav.main{display:flex;gap:6px;flex-wrap:wrap}
+  nav.main a{
+    text-decoration:none;color:var(--navy);font-weight:600;font-size:1rem;
+    padding:12px 16px;border-radius:10px;min-height:var(--tap);display:inline-flex;align-items:center;
+    transition:background .18s ease, color .18s ease;
+  }
+  nav.main a:hover, nav.main a:focus-visible{background:var(--navy);color:var(--cream);outline:none}
+
+  /* =====================  HERO  ===================== */
+  .hero{position:relative;overflow:hidden;padding:64px 0 54px;text-align:center}
+  .hero .starburst{
+    position:absolute;inset:-30% -10% auto -10%;height:140%;z-index:-1;opacity:.30;pointer-events:none;
+    background:
+      repeating-conic-gradient(from 0deg at 50% 38%,
+        var(--crimson) 0deg 6deg,
+        var(--cream) 6deg 12deg,
+        var(--navy) 12deg 18deg,
+        var(--cream) 18deg 24deg);
+    -webkit-mask:radial-gradient(closest-side at 50% 38%, #000 0%, #000 26%, transparent 62%);
+            mask:radial-gradient(closest-side at 50% 38%, #000 0%, #000 26%, transparent 62%);
+  }
+  .hero .eyebrow{letter-spacing:3px;text-transform:uppercase;font-size:.8rem;color:var(--crimson);font-weight:600}
+  .hero h1{
+    font-size:clamp(2.6rem, 6vw, 4.6rem);font-weight:900;color:var(--navy);
+    margin:.18em 0 .12em;line-height:1.02;
+  }
+  .hero .tag{font-style:italic;font-size:clamp(1.1rem,2.4vw,1.5rem);color:var(--crimson)}
+  .hero p.lede{max-width:680px;margin:18px auto 0;color:var(--ink-soft);font-size:1.12rem}
+
+  .herosearch{max-width:620px;margin:26px auto 0;display:flex;gap:10px}
+  .herosearch input{
+    flex:1;min-height:var(--tap);font-family:var(--font-body);font-size:1.1rem;
+    padding:12px 18px;border-radius:12px;border:2px solid var(--parchment);background:var(--card);color:var(--ink);
+  }
+  .herosearch input:focus{outline:none;border-color:var(--gold)}
+
+  .btn{
+    cursor:pointer;border:none;border-radius:12px;min-height:var(--tap);
+    padding:12px 22px;font-family:var(--font-body);font-weight:600;font-size:1.05rem;
+    background:var(--crimson);color:var(--cream);
+    transition:transform .15s ease, background .18s ease, box-shadow .18s ease;
+    box-shadow:0 4px 14px var(--shadow);
+  }
+  .btn:hover{background:var(--crimson-deep);transform:translateY(-1px)}
+  .btn.ghost{background:transparent;color:var(--navy);border:2px solid var(--navy)}
+  .btn.ghost:hover{background:var(--navy);color:var(--cream)}
+  .btn.gold{background:var(--gold);color:var(--navy-deep)}
+  .btn.gold:hover{background:var(--gold-soft)}
+
+  /* =====================  SECTIONS  ===================== */
+  section.block{padding:54px 0}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+  .sec-head h2{font-size:clamp(1.8rem,4vw,2.6rem);color:var(--navy);margin:0}
+  .sec-head .hint{color:var(--ink-soft);font-style:italic}
+  .rule{height:3px;background:linear-gradient(90deg,var(--crimson),var(--gold) 60%,transparent);border-radius:3px;margin:6px 0 26px}
+
+  /* ---- controls (search + filters) ---- */
+  .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:22px}
+  .controls input[type=search]{
+    flex:1;min-width:220px;min-height:var(--tap);font-family:var(--font-body);font-size:1.05rem;
+    padding:10px 16px;border-radius:12px;border:2px solid var(--parchment);background:var(--card);color:var(--ink)
+  }
+  .controls input[type=search]:focus{outline:none;border-color:var(--gold)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{
+    cursor:pointer;border:2px solid var(--parchment);background:var(--card);color:var(--navy);
+    border-radius:999px;padding:9px 16px;min-height:var(--tap);font-family:var(--font-body);font-weight:600;font-size:.98rem;
+    transition:background .15s ease,color .15s ease,border-color .15s ease;
+  }
+  .chip[aria-pressed="true"]{background:var(--navy);color:var(--cream);border-color:var(--navy)}
+  .viewtoggle{display:flex;gap:6px;background:var(--parchment);padding:5px;border-radius:12px}
+  .viewtoggle button{
+    cursor:pointer;border:none;background:transparent;color:var(--navy-deep);font-family:var(--font-body);font-weight:600;
+    padding:9px 16px;border-radius:9px;min-height:42px;font-size:1rem;
+  }
+  .viewtoggle button[aria-pressed="true"]{background:var(--cream);box-shadow:0 1px 4px var(--shadow)}
+
+  /* ---- person cards ---- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+  .card{
+    background:var(--card);border:1px solid var(--parchment);border-radius:var(--r);overflow:hidden;
+    box-shadow:0 6px 18px var(--shadow);cursor:pointer;text-align:left;width:100%;
+    transition:transform .18s ease, box-shadow .18s ease;display:flex;flex-direction:column;
+  }
+  .card:hover, .card:focus-visible{transform:translateY(-3px);box-shadow:0 12px 26px var(--shadow);outline:none}
+  .card .accent{height:8px;background:linear-gradient(90deg,var(--crimson),var(--gold),var(--navy))}
+  .card .pic{aspect-ratio:4/3;background:var(--parchment);position:relative;overflow:hidden;display:grid;place-items:center}
+  .card .pic img{width:100%;height:100%;object-fit:cover}
+  .ph{width:100%;height:100%;display:grid;place-items:center;
+      background:repeating-conic-gradient(from 0deg at 50% 50%, var(--crimson) 0 10deg, var(--cream) 10deg 20deg, var(--navy) 20deg 30deg, var(--cream) 30deg 40deg)}
+  .ph .initials{width:74px;height:74px;border-radius:50%;background:var(--cream);color:var(--navy);
+      display:grid;place-items:center;font-family:var(--font-display);font-weight:900;font-size:1.5rem;
+      box-shadow:0 0 0 3px var(--gold)}
+  .card .body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .card .pname{font-family:var(--font-display);font-weight:700;font-size:1.32rem;color:var(--navy);line-height:1.15}
+  .card .dates{color:var(--ink-soft);font-size:1rem}
+  .card .tags{margin-top:auto;display:flex;gap:6px;flex-wrap:wrap;padding-top:8px}
+  .gen-tag{background:var(--navy);color:var(--cream);font-size:.8rem;padding:4px 10px;border-radius:999px;font-weight:600}
+  .ribbon{display:inline-flex;align-items:center;gap:6px;background:var(--crimson);color:var(--cream);
+      font-size:.8rem;padding:4px 10px;border-radius:6px;font-weight:600}
+  .ribbon::before{content:"";width:14px;height:10px;border-radius:2px;
+      background:linear-gradient(180deg,var(--crimson) 0 33%, var(--cream) 33% 66%, var(--navy) 66% 100%);box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+
+  .empty{padding:40px;text-align:center;color:var(--ink-soft);font-style:italic;
+      border:2px dashed var(--parchment);border-radius:var(--r);background:var(--card)}
+
+  /* ---- tree view ---- */
+  #treeView{display:none}
+  .gens{display:flex;flex-direction:column;gap:34px}
+  .genrow{}
+  .genrow h3{margin:0 0 14px;color:var(--crimson);font-size:1.15rem;letter-spacing:1px;text-transform:uppercase;
+      display:flex;align-items:center;gap:12px}
+  .genrow h3::after{content:"";flex:1;height:2px;background:var(--parchment)}
+  .nodes{display:flex;gap:16px;flex-wrap:wrap}
+  .node{
+    background:var(--card);border:1px solid var(--parchment);border-radius:12px;padding:12px 16px;cursor:pointer;
+    display:flex;align-items:center;gap:12px;min-height:var(--tap);min-width:220px;text-align:left;
+    transition:transform .15s ease,box-shadow .15s ease;box-shadow:0 4px 12px var(--shadow)
+  }
+  .node:hover,.node:focus-visible{transform:translateY(-2px);box-shadow:0 8px 18px var(--shadow);outline:none}
+  .star{width:34px;height:34px;flex:0 0 34px;border-radius:50%;display:grid;place-items:center;color:var(--cream);
+      background:radial-gradient(circle at 50% 50%, var(--gold) 0 40%, var(--crimson) 41% 100%);font-size:.95rem;font-weight:900;font-family:var(--font-display)}
+  .node .nname{font-family:var(--font-display);font-weight:700;color:var(--navy);line-height:1.1}
+  .node .ndate{font-size:.92rem;color:var(--ink-soft)}
+
+  /* ---- roll of honor ---- */
+  .honor{background:var(--navy);color:var(--cream);border-radius:var(--r);padding:30px 26px;
+      border:3px double var(--gold)}
+  .honor h2{color:var(--gold-soft)}
+  .honor .rule{background:linear-gradient(90deg,var(--gold),transparent)}
+  .honor .hint{color:#c9d5e2}
+  .honorgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+  .hcard{background:rgba(255,255,255,.06);border:1px solid rgba(224,180,94,.4);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;width:100%;color:var(--cream);
+      transition:background .15s ease, transform .15s ease}
+  .hcard:hover{background:rgba(255,255,255,.12);transform:translateY(-2px)}
+  .hcard .hn{font-family:var(--font-display);font-weight:700;font-size:1.15rem;color:#fff}
+  .hcard .hs{color:var(--gold-soft);font-size:.95rem}
+  .branchfilter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .branchfilter .chip{background:rgba(255,255,255,.08);color:var(--cream);border-color:rgba(224,180,94,.45)}
+  .branchfilter .chip[aria-pressed="true"]{background:var(--gold);color:var(--navy-deep);border-color:var(--gold)}
+
+  /* ---- the quilt ---- */
+  .quilt{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center}
+  .quilt .frame{
+    border:10px solid var(--navy);outline:4px solid var(--gold);outline-offset:-18px;border-radius:8px;
+    background:var(--navy-deep);aspect-ratio:4/3;display:grid;place-items:center;overflow:hidden;cursor:zoom-in;position:relative
+  }
+  .quilt .frame img{width:100%;height:100%;object-fit:cover;filter:sepia(.15)}
+  .quilt .frame .fallback{position:absolute;inset:0;
+      background:repeating-conic-gradient(from 0deg at 50% 50%, var(--crimson) 0 8deg, var(--cream) 8deg 16deg, var(--navy) 16deg 24deg, var(--gold) 24deg 32deg);opacity:.9}
+  .quilt .frame .fallback span{position:absolute;inset:0;display:grid;place-items:center;color:var(--cream);font-family:var(--font-display);font-style:italic;text-shadow:0 2px 6px #000}
+  .quilt h2{margin-top:0}
+  @media(max-width:760px){.quilt{grid-template-columns:1fr}}
+
+  /* ---- jack's notes ---- */
+  .jack{background:var(--card);border-left:8px solid var(--crimson);border-radius:0 var(--r) var(--r) 0;padding:28px 30px;box-shadow:0 6px 18px var(--shadow)}
+  .jack h2{margin-top:0;color:var(--crimson)}
+  .jack p{font-size:1.08rem}
+  .jack .sig{font-family:var(--font-display);font-style:italic;font-size:1.25rem;color:var(--navy);margin-top:18px}
+
+  /* ---- add a memory ---- */
+  .memory{background:var(--card);border:2px dashed var(--parchment);border-radius:var(--r);padding:28px 26px}
+  .memory .row{display:flex;gap:14px;flex-wrap:wrap}
+  .memory label{display:flex;flex-direction:column;gap:6px;font-weight:600;color:var(--navy);flex:1;min-width:220px;font-size:1rem}
+  .memory input,.memory textarea{font-family:var(--font-body);font-size:1.05rem;padding:11px 14px;border-radius:10px;border:2px solid var(--parchment);background:var(--cream);color:var(--ink)}
+  .memory input:focus,.memory textarea:focus{outline:none;border-color:var(--gold)}
+  .memory textarea{min-height:120px;resize:vertical}
+  .memory .note{color:var(--ink-soft);font-style:italic;font-size:.98rem;margin-top:4px}
+
+  /* =====================  MODAL  ===================== */
+  .overlay{position:fixed;inset:0;background:rgba(18,42,68,.55);backdrop-filter:blur(3px);
+      display:none;align-items:flex-start;justify-content:center;padding:30px 16px;z-index:60;overflow:auto}
+  .overlay.open{display:flex}
+  .modal{
+    background:var(--card);max-width:760px;width:100%;border-radius:18px;overflow:hidden;
+    box-shadow:0 24px 60px rgba(0,0,0,.4);border:1px solid var(--parchment);
+    animation:rise .22s ease;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .modal .top{height:10px;background:linear-gradient(90deg,var(--crimson),var(--gold),var(--navy))}
+  .modal .mhead{display:flex;gap:20px;padding:24px 26px 6px;flex-wrap:wrap}
+  .modal .mpic{width:150px;height:150px;flex:0 0 150px;border-radius:12px;overflow:hidden;background:var(--parchment);box-shadow:0 0 0 3px var(--gold)}
+  .modal .mpic img{width:100%;height:100%;object-fit:cover}
+  .modal .mtitle h2{margin:0;color:var(--navy);font-size:2rem;line-height:1.05}
+  .modal .mtitle .md{color:var(--ink-soft);font-size:1.05rem;margin-top:4px}
+  .modal .mtitle .cap{font-style:italic;color:var(--ink-soft);font-size:.95rem;margin-top:8px}
+  .modal .mbody{padding:8px 26px 8px}
+  .fact{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--parchment)}
+  .fact .k{flex:0 0 140px;font-weight:600;color:var(--crimson)}
+  .fact .v{color:var(--ink)}
+  .notesblock{background:var(--cream);border-radius:12px;padding:16px 18px;margin:16px 0;border:1px solid var(--parchment)}
+  .notesblock .lbl{font-family:var(--font-display);color:var(--crimson);font-weight:700;margin-bottom:6px}
+  .sources{font-size:.92rem;color:var(--ink-soft);margin-top:6px}
+  .modal .mfoot{display:flex;gap:12px;justify-content:flex-end;padding:14px 26px 24px;flex-wrap:wrap}
+  .iconbtn{position:absolute;top:18px;right:18px;width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
+      background:rgba(255,255,255,.9);color:var(--navy);font-size:1.4rem;box-shadow:0 4px 12px var(--shadow)}
+  .modal{position:relative}
+
+  /* =====================  FOOTER  ===================== */
+  footer.site{background:var(--navy-deep);color:#c9d5e2;padding:36px 0 44px;margin-top:30px;text-align:center}
+  footer.site .flagrule{height:6px;background:linear-gradient(90deg,var(--crimson) 0 33%,var(--cream) 33% 66%,var(--navy) 66% 100%);margin-bottom:24px;border-radius:3px}
+  footer.site strong{color:var(--gold-soft);font-family:var(--font-display)}
+
+  /* =====================  PRINT  ===================== */
+  @media print{
+    header.site,footer.site,.hero .herosearch,.controls,.viewtoggle,.memory,nav.main,.iconbtn,.mfoot,.btn{display:none !important}
+    body{background:#fff;font-size:12pt}
+    .overlay{position:static;background:#fff;display:block;padding:0}
+    .modal{box-shadow:none;border:1px solid #999;max-width:100%}
+    .modal .top,.card .accent{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+
+  @media(max-width:560px){
+    .brand .name{font-size:1.25rem}
+    .hero{padding:46px 0 40px}
+    nav.main a{padding:10px 12px;font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="The Minnier Family — home">
+      <span class="seal" aria-hidden="true"></span>
+      <span>
+        <span class="name">The Minnier Family</span><br/>
+        <span class="sub">Uncle Jack's Royale Directory of Degenerates</span>
+      </span>
+    </a>
+    <nav class="main" aria-label="Primary">
+      <a href="#people">People</a>
+      <a href="#honor">Roll of Honor</a>
+      <a href="#quilt">The Quilt</a>
+      <a href="#jack">Jack</a>
+      <a href="#memory">Add a Memory</a>
+    </nav>
+  </div>
+  <div class="stitch" aria-hidden="true"></div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="top">
+  <div class="starburst" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="eyebrow">Est. in the 1600s · Kept by hand, kept with love</div>
+    <h1>The Minnier Line</h1>
+    <div class="tag">Four centuries of one stubborn, honorable family.</div>
+    <p class="lede">Every name here was found, checked, and remembered by Jack Minnier — so the children and grandchildren of this family will always know exactly where they came from.</p>
+    <form class="herosearch" role="search" onsubmit="return scrollSearch(event)">
+      <input id="heroSearch" type="search" placeholder="Search a name… (try “Minnier”)" aria-label="Search family members" />
+      <button class="btn gold" type="submit">Search</button>
+    </form>
+  </div>
+</section>
+
+<!-- ===================== PEOPLE ===================== -->
+<section class="block" id="people">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>The Family</h2>
+      <span class="hint" id="countHint">—</span>
+    </div>
+    <div class="rule" aria-hidden="true"></div>
+
+    <div class="controls">
+      <input type="search" id="search" placeholder="Search by name…" aria-label="Search people by name" />
+      <div class="chips" id="genChips" role="group" aria-label="Filter by generation"></div>
+      <div class="viewtoggle" role="group" aria-label="Switch view">
+        <button id="btnCards" aria-pressed="true" onclick="setView('cards')">Cards</button>
+        <button id="btnTree" aria-pressed="false" onclick="setView('tree')">Tree</button>
+      </div>
+    </div>
+
+    <div id="cardView"><div class="grid" id="cardGrid"></div></div>
+    <div id="treeView"><div class="gens" id="treeGens"></div></div>
+  </div>
+</section>
+
+<div class="stitch" aria-hidden="true"></div>
+
+<!-- ===================== ROLL OF HONOR ===================== -->
+<section class="block" id="honor">
+  <div class="wrap">
+    <div class="honor">
+      <div class="sec-head">
+        <h2>Roll of Honor</h2>
+        <span class="hint">Those who served.</span>
+      </div>
+      <div class="rule" aria-hidden="true"></div>
+      <div class="branchfilter" id="branchChips" role="group" aria-label="Filter by branch"></div>
+      <div class="honorgrid" id="honorGrid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== THE QUILT ===================== -->
+<section class="block" id="quilt">
+  <div class="wrap">
+    <div class="quilt">
+      <div class="frame" id="quiltFrame" title="Click to view larger" onclick="zoomQuilt()">
+        <div class="fallback" aria-hidden="true"><span>Aunt Molly's Quilt</span></div>
+        <img id="quiltImg" alt="The Minnier Family Quilt, made by Aunt Molly — a starburst of hand-embroidered names" onerror="this.style.display='none'" />
+      </div>
+      <div>
+        <h2>Aunt Molly's Quilt</h2>
+        <div class="rule" aria-hidden="true"></div>
+        <p>Made by great-great-great-aunt Molly, the Minnier Family Quilt is a landmark in their rural Pennsylvania town. Every petal of its starburst holds a family name, hand-embroidered in cursive with dates. At the center: crossed American flags, gold stars, and a written family declaration.</p>
+        <p>It is the soul of this whole archive. Its pattern, its colors, and its spirit shaped every page you'll find here.</p>
+        <button class="btn ghost" onclick="zoomQuilt()">View the quilt up close</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stitch" aria-hidden="true"></div>
+
+<!-- ===================== JACK ===================== -->
+<section class="block" id="jack">
+  <div class="wrap">
+    <div class="jack">
+      <h2>Jack's Field Notes</h2>
+      <div class="rule" aria-hidden="true"></div>
+      <p>Every year, Jack Minnier visits every cemetery in rural Pennsylvania with a bundle of American flags. He hikes the hills — with every old-man problem you can name — and swaps every tattered flag for a fresh one. Alone. To honor his fellow soldiers.</p>
+      <p>He serves his American Legion post. He is a Vietnam veteran. And he built this archive, name by name, so that no one who carries the Minnier name ever has to wonder where they came from.</p>
+      <p>This is not a side project. This is a legacy.</p>
+      <div class="sig">— for Jack, who keeps the line</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ADD A MEMORY ===================== -->
+<section class="block" id="memory">
+  <div class="wrap">
+    <div class="sec-head"><h2>Add a Memory</h2><span class="hint">Family only.</span></div>
+    <div class="rule" aria-hidden="true"></div>
+    <div class="memory">
+      <p>Got a photo, a story, or a name Jack should know about? Send it in. Jack reviews everything before it joins the archive.</p>
+      <form onsubmit="return submitMemory(event)">
+        <div class="row">
+          <label>Your name
+            <input id="mName" type="text" required placeholder="e.g. Mike Minnier" />
+          </label>
+          <label>Your email
+            <input id="mEmail" type="email" placeholder="so Jack can reach you" />
+          </label>
+        </div>
+        <div class="row">
+          <label>Who is this about? <span style="font-weight:400;color:var(--ink-soft)">(optional)</span>
+            <input id="mWho" type="text" placeholder="Family member's name" />
+          </label>
+        </div>
+        <div class="row">
+          <label style="flex:1 1 100%">Your memory, story, or correction
+            <textarea id="mMsg" required placeholder="Tell it the way you remember it."></textarea>
+          </label>
+        </div>
+        <div class="note">Photos: reply to Jack's confirmation email and attach them, or hand them to him at the next reunion.</div>
+        <div style="margin-top:16px"><button class="btn" type="submit">Send to Jack</button></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site">
+  <div class="wrap">
+    <div class="flagrule" aria-hidden="true"></div>
+    <p><strong>The Minnier Family</strong> · kept by Jack Minnier, family historian</p>
+    <p style="font-size:.92rem;opacity:.8">Built with love. <span id="year"></span> · minnier-family.com</p>
+  </div>
+</footer>
+
+<!-- ===================== PERSON MODAL ===================== -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalName">
+    <div class="top" aria-hidden="true"></div>
+    <button class="iconbtn" onclick="closeModal()" aria-label="Close">✕</button>
+    <div class="mhead">
+      <div class="mpic" id="modalPic"></div>
+      <div class="mtitle">
+        <h2 id="modalName"></h2>
+        <div class="md" id="modalDates"></div>
+        <div class="cap" id="modalCap"></div>
+      </div>
+    </div>
+    <div class="mbody" id="modalBody"></div>
+    <div class="mfoot">
+      <button class="btn ghost" onclick="window.print()">Print this card</button>
+      <button class="btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   THE MINNIER LEGACY — data + behavior
+   ----------------------------------------------------------------
+   DATA LAYER IS SWAPPABLE.
+   Today it runs on the baked-in FAMILY array below (Phase 1).
+   When Supabase is live, set DATA_MODE = "supabase" and fill in
+   SUPABASE_URL / SUPABASE_ANON_KEY. Nothing else changes.
+   The Supabase table schema is documented at the very bottom.
+   ================================================================ */
+
+const DATA_MODE = "supabase";            // "static"  |  "supabase"  — now LIVE
+const SUPABASE_URL = "https://dmajuxcquifpoflzggol.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_E6ALn_PDACsAMXB5owuvvQ_MaV637OU"; // public key, safe in browser (read-only via RLS)
+
+/* ----------------------------------------------------------------
+   HOW JACK ADDS A PERSON  (no code knowledge required, just copy a block)
+   Copy one { ... } block, paste it, change the words between the quotes.
+   - generation: "I" is the oldest, count down the line (I, II, III, IV, V)
+   - parents/children/spouse: use the other person's "id"
+   - military: delete the whole "military" line if they didn't serve
+   - photo: a filename you put in the /photos folder, or leave ""
+   ---------------------------------------------------------------- */
+const FAMILY = [
+  // Great-Grandparents (born 1850s–1870s)
+  {id:"john_albert",name:"John Albert Minnier",generation:"Great-Grandparents",genOrder:50,birth:{date:"1866",place:""},death:{date:"1934",place:""},photo:"",photoCaption:"",military:null,spouse:["mary_treon"],children:["wilford_minnier"],notes:"",sources:["Family tree (Jack's records)","Headstone record"]},
+  {id:"mary_treon",name:"Mary Elizabeth Treon",generation:"Great-Grandparents",genOrder:50,birth:{date:"1871",place:""},death:{date:"1930",place:""},photo:"",photoCaption:"",military:null,spouse:["john_albert"],children:["wilford_minnier"],notes:"",sources:["Family tree (Jack's records)","Headstone record"]},
+  {id:"jacob_snyder",name:"Jacob Isaiah Snyder",generation:"Great-Grandparents",genOrder:50,birth:{date:"1859",place:""},death:{date:"1934",place:""},photo:"",photoCaption:"",military:null,spouse:["marietta_snyder"],children:["irma_snyder"],notes:"",sources:["Family tree (Jack's records)"]},
+  {id:"marietta_snyder",name:"Marietta M Snyder",generation:"Great-Grandparents",genOrder:50,birth:{date:"1866",place:""},death:{date:"1926",place:""},photo:"",photoCaption:"",military:null,spouse:["jacob_snyder"],children:["irma_snyder"],notes:"",sources:["Family tree (Jack's records)"]},
+  {id:"charles_urba",name:"Charles Lawrence Urba",generation:"Great-Grandparents",genOrder:50,birth:{date:"1850",place:""},death:{date:"1920",place:""},photo:"",photoCaption:"",military:null,spouse:["agatha_urba"],children:["edward_urba"],notes:"",sources:["Family tree (Jack's records)","Headstone record"]},
+  {id:"agatha_urba",name:"Agatha Jurimavicus",generation:"Great-Grandparents",genOrder:50,birth:{date:"1850",place:""},death:{date:"1920",place:""},photo:"",photoCaption:"",military:null,spouse:["charles_urba"],children:["edward_urba"],notes:"",sources:["Family tree (Jack's records)","Headstone record"]},
+  {id:"francis_james",name:"Francis James",generation:"Great-Grandparents",genOrder:50,birth:{date:"1863",place:""},death:{date:"1944",place:""},photo:"",photoCaption:"",military:null,spouse:["sadie_renner"],children:["frances_james"],notes:"",sources:["Family tree (Jack's records)"]},
+  {id:"sadie_renner",name:"Sadie R Renner",generation:"Great-Grandparents",genOrder:50,birth:{date:"1866",place:""},death:{date:"1940",place:""},photo:"",photoCaption:"",military:null,spouse:["francis_james"],children:["frances_james"],notes:"",sources:["Family tree (Jack's records)"]},
+
+  // Grandparents (born 1890s–1900s)
+  {id:"wilford_minnier",name:"Wilford Shreiner Minnier",generation:"Grandparents",genOrder:60,birth:{date:"1893",place:""},death:{date:"1947",place:""},photo:"",photoCaption:"",military:null,spouse:["irma_snyder"],children:["jack_wilford"],notes:"",sources:["Family tree (Jack's records)"]},
+  {id:"irma_snyder",name:"Irma Lorraine Snyder",generation:"Grandparents",genOrder:60,birth:{date:"1892",place:""},death:{date:"1979",place:""},photo:"",photoCaption:"",military:null,spouse:["wilford_minnier"],children:["jack_wilford"],notes:"",sources:["Family tree (Jack's records)"]},
+  {id:"edward_urba",name:"Edward Francis Urba",generation:"Grandparents",genOrder:60,birth:{date:"1894",place:""},death:{date:"1962",place:""},photo:"",photoCaption:"",military:null,spouse:["frances_james"],children:["nancy_urba"],notes:"",sources:["Family tree (Jack's records)"]},
+  {id:"frances_james",name:"Frances Katherine James",generation:"Grandparents",genOrder:60,birth:{date:"1902",place:""},death:{date:"2002",place:""},photo:"",photoCaption:"",military:null,spouse:["edward_urba"],children:["nancy_urba"],notes:"",sources:["Family tree (Jack's records)"]},
+
+  // Parents (born 1920s) — Jack & his brother's mother and father
+  {id:"jack_wilford",name:"Jack Wilford Minnier",generation:"Parents",genOrder:70,birth:{date:"1920",place:""},death:{date:"1999",place:""},photo:"",photoCaption:"Jack & his brother's father",military:null,spouse:["nancy_urba"],children:["jack"],notes:"",sources:["Family tree (Jack's records)"]},
+  {id:"nancy_urba",name:"Nancy Lois Urba",generation:"Parents",genOrder:70,birth:{date:"1926",place:""},death:{date:"2001",place:""},photo:"",photoCaption:"Jack & his brother's mother",military:null,spouse:["jack_wilford"],children:["jack"],notes:"",sources:["Family tree (Jack's records)"]},
+
+  // Jack's Generation
+  {id:"jack",name:"Jack Minnier",generation:"Jack's Generation",genOrder:80,birth:{date:"—",place:"Rural Pennsylvania"},death:null,photo:"",photoCaption:"Jack — Vietnam veteran, American Legion, family historian",military:{branch:"Army",years:"Vietnam era",conflict:"Vietnam War"},spouse:["val"],children:[],notes:"The keeper of the line. Vietnam veteran, American Legion post member, and the man who built this archive name by name. Every year he re-flags every veteran's grave in the county, by hand, alone. This whole site exists because of him.",sources:["Jack's own account","American Legion records"]},
+  {id:"val",name:"Val Minnier",generation:"Jack's Generation",genOrder:80,birth:{date:"—",place:""},death:null,photo:"",photoCaption:"",military:null,spouse:["jack"],children:[],notes:"Jack's wife. Placeholder — Jack, add the story here.",sources:[]}
+];
+
+/* ================= DATA SOURCE (swappable seam) ================= */
+const DataSource = {
+  async loadPeople(){
+    if(DATA_MODE === "supabase" && SUPABASE_URL){
+      try{
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/people?select=*&order=gen_order.asc,name.asc`, {
+          headers:{ apikey:SUPABASE_ANON_KEY, Authorization:`Bearer ${SUPABASE_ANON_KEY}` }
+        });
+        const rows = await res.json();
+        return rows.map(normalizeRow);
+      }catch(e){
+        console.warn("Supabase load failed, falling back to baked data:", e);
+        return FAMILY;
+      }
+    }
+    return FAMILY;
+  }
+};
+// maps a flat Supabase row -> the shape the UI expects
+function normalizeRow(r){
+  return {
+    id:String(r.id), name:r.name, generation:r.generation, genOrder:(r.gen_order??999),
+    birth:{date:r.birth_date||"—", place:r.birth_place||""},
+    death:r.death_date ? {date:r.death_date, place:r.death_place||""} : null,
+    photo:r.photo_url||"", photoCaption:r.photo_caption||"",
+    military:r.military_branch ? {branch:r.military_branch, years:r.military_years||"", conflict:r.military_conflict||""} : null,
+    spouse:r.spouse_ids||[], children:r.child_ids||[],
+    notes:r.notes||"", sources:r.sources||[]
+  };
+}
+
+/* ===================== STATE ===================== */
+let PEOPLE = [];
+let activeGen = "all";
+let activeBranch = "all";
+let view = "cards";
+const byId = {};
+
+// Generations are ordered by genOrder (lower = older). Labels are descriptive
+// and anchored on Jack, so adding older ancestors never forces a renumber.
+let GENERATIONS = [];                 // ordered [{label, order}] built from data
+const orderOf = label => { const g = GENERATIONS.find(x=>x.label===label); return g?g.order:999; };
+const genName = g => g;               // labels are already display-ready
+function buildGenerations(){
+  const map = new Map();
+  PEOPLE.forEach(p=>{ if(!map.has(p.generation)) map.set(p.generation, p.genOrder); });
+  GENERATIONS = [...map.entries()].map(([label,order])=>({label,order})).sort((a,b)=>a.order-b.order);
+}
+
+/* ===================== INIT ===================== */
+(async function init(){
+  document.getElementById("year").textContent = new Date().getFullYear();
+  // quilt image: tries common filenames, degrades to the woven CSS fallback
+  tryQuiltImage(["photos/IMG_9075.jpeg","IMG_9075.jpeg","photos/quilt.jpg","quilt.jpg"]);
+
+  PEOPLE = await DataSource.loadPeople();
+  PEOPLE.forEach(p => byId[p.id] = p);
+
+  buildGenerations();
+  buildGenChips();
+  buildBranchChips();
+  renderCards();
+  renderTree();
+  renderHonor();
+
+  document.getElementById("search").addEventListener("input", renderCards);
+  document.addEventListener("keydown", e => { if(e.key==="Escape") closeModal(); });
+})();
+
+/* ===================== PEOPLE: cards ===================== */
+function currentFilter(){
+  const q = (document.getElementById("search").value || "").trim().toLowerCase();
+  return PEOPLE.filter(p=>{
+    const okGen = activeGen==="all" || p.generation===activeGen;
+    const okQ = !q || p.name.toLowerCase().includes(q);
+    return okGen && okQ;
+  });
+}
+
+function renderCards(){
+  const list = currentFilter();
+  const grid = document.getElementById("cardGrid");
+  document.getElementById("countHint").textContent =
+    `${list.length} ${list.length===1?"person":"people"}` + (activeGen!=="all"?` · ${genName(activeGen)}`:"");
+  if(!list.length){
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1">No one matches that yet. Try a different name — or add them with “Add a Memory.”</div>`;
+    return;
+  }
+  grid.innerHTML = list.map(p=>`
+    <button class="card" onclick="openModal('${p.id}')" aria-label="Open ${escapeAttr(p.name)}">
+      <span class="accent" aria-hidden="true"></span>
+      <span class="pic">${pic(p)}</span>
+      <span class="body">
+        <span class="pname">${escapeHtml(p.name)}</span>
+        <span class="dates">${lifespan(p)}</span>
+        <span class="tags">
+          <span class="gen-tag">${escapeHtml(p.generation)}</span>
+          ${p.military?`<span class="ribbon">${escapeHtml(p.military.branch)}</span>`:""}
+        </span>
+      </span>
+    </button>`).join("");
+}
+
+function pic(p){
+  if(p.photo){
+    return `<img src="${escapeAttr(p.photo)}" alt="${escapeAttr(p.name)}"
+            onerror="this.parentNode.innerHTML='${phMarkup(p)}'">`;
+  }
+  return phMarkup(p);
+}
+function phMarkup(p){
+  // unquoted attributes on purpose: this string also gets injected into an
+  // inline onerror="...innerHTML='...'" handler, so it must contain no quotes.
+  return `<span class=ph><span class=initials>${initials(p.name)}</span></span>`;
+}
+function initials(name){
+  const parts = name.replace(/c\.\s*/i,"").split(/\s+/).filter(Boolean);
+  return ((parts[0]?.[0]||"") + (parts[parts.length-1]?.[0]||"")).toUpperCase();
+}
+function lifespan(p){
+  const b = p.birth?.date || "—";
+  const d = p.death ? (p.death.date||"—") : "Living";
+  return `${b} – ${d}`;
+}
+
+/* ===================== GEN CHIPS ===================== */
+function buildGenChips(){
+  const el = document.getElementById("genChips");
+  el.innerHTML = `<button class="chip" aria-pressed="true" onclick="setGen(-1,this)">All</button>` +
+    GENERATIONS.map((g,i)=>`<button class="chip" aria-pressed="false" onclick="setGen(${i},this)">${escapeHtml(g.label)}</button>`).join("");
+}
+function setGen(i, btn){
+  activeGen = (i<0) ? "all" : GENERATIONS[i].label;
+  document.querySelectorAll("#genChips .chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+  btn.setAttribute("aria-pressed","true");
+  renderCards(); renderTree();
+}
+
+/* ===================== VIEW TOGGLE ===================== */
+function setView(v){
+  view = v;
+  document.getElementById("cardView").style.display = v==="cards"?"block":"none";
+  document.getElementById("treeView").style.display = v==="tree"?"block":"none";
+  document.getElementById("btnCards").setAttribute("aria-pressed", v==="cards");
+  document.getElementById("btnTree").setAttribute("aria-pressed", v==="tree");
+}
+
+/* ===================== TREE ===================== */
+function renderTree(){
+  const gens = GENERATIONS.map(g=>g.label);
+  const host = document.getElementById("treeGens");
+  host.innerHTML = gens.map(g=>{
+    const members = PEOPLE.filter(p=>p.generation===g && (activeGen==="all"||activeGen===g));
+    if(!members.length) return "";
+    return `<div class="genrow">
+      <h3>${genName(g)}</h3>
+      <div class="nodes">
+        ${members.map(p=>`
+          <button class="node" onclick="openModal('${p.id}')">
+            <span class="star" aria-hidden="true">${p.military?"★":initials(p.name)}</span>
+            <span>
+              <span class="nname">${escapeHtml(p.name)}</span><br/>
+              <span class="ndate">${lifespan(p)}</span>
+            </span>
+          </button>`).join("")}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* ===================== ROLL OF HONOR ===================== */
+function vets(){ return PEOPLE.filter(p=>p.military); }
+function buildBranchChips(){
+  const branches = [...new Set(vets().map(p=>p.military.branch))].sort();
+  const el = document.getElementById("branchChips");
+  el.innerHTML = `<button class="chip" aria-pressed="true" onclick="setBranch('all',this)">All branches</button>` +
+    branches.map(b=>`<button class="chip" aria-pressed="false" onclick="setBranch('${escapeAttr(b)}',this)">${escapeHtml(b)}</button>`).join("");
+}
+function setBranch(b, btn){
+  activeBranch = b;
+  document.querySelectorAll("#branchChips .chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+  btn.setAttribute("aria-pressed","true");
+  renderHonor();
+}
+function renderHonor(){
+  const list = vets().filter(p=>activeBranch==="all"||p.military.branch===activeBranch);
+  const el = document.getElementById("honorGrid");
+  if(!list.length){ el.innerHTML = `<div class="empty" style="grid-column:1/-1;color:#c9d5e2;background:transparent;border-color:rgba(224,180,94,.4)">No members listed for this branch yet.</div>`; return; }
+  el.innerHTML = list.map(p=>`
+    <button class="hcard" onclick="openModal('${p.id}')">
+      <div class="hn">${escapeHtml(p.name)}</div>
+      <div class="hs">${escapeHtml(p.military.branch)}${p.military.conflict?` · ${escapeHtml(p.military.conflict)}`:""}</div>
+      <div class="hs" style="opacity:.85">${escapeHtml(p.military.years||"")}</div>
+    </button>`).join("");
+}
+
+/* ===================== MODAL ===================== */
+let lastFocus = null;
+function openModal(id){
+  const p = byId[id]; if(!p) return;
+  lastFocus = document.activeElement;
+  document.getElementById("modalPic").style.display = "";
+  document.getElementById("modalName").textContent = p.name;
+  document.getElementById("modalDates").textContent = lifespan(p) + (p.birth?.place?` · ${p.birth.place}`:"");
+  document.getElementById("modalCap").textContent = p.photoCaption || "";
+  document.getElementById("modalPic").innerHTML = p.photo
+    ? `<img src="${escapeAttr(p.photo)}" alt="${escapeAttr(p.name)}" onerror="this.parentNode.innerHTML='${phMarkup(p)}'">`
+    : phMarkup(p);
+
+  const rel = relationships(p);
+  document.getElementById("modalBody").innerHTML = `
+    ${fact("Born", [p.birth?.date, p.birth?.place].filter(Boolean).join(" · ")||"—")}
+    ${p.death?fact("Died", [p.death.date, p.death.place].filter(Boolean).join(" · ")||"—"):fact("Status","Living")}
+    ${fact("Generation", genName(p.generation))}
+    ${p.military?fact("Service", `${p.military.branch}${p.military.years?` · ${p.military.years}`:""}${p.military.conflict?` · ${p.military.conflict}`:""}`):""}
+    ${rel?fact("Family", rel):""}
+    ${p.notes?`<div class="notesblock"><div class="lbl">Jack's Notes</div><div>${escapeHtml(p.notes)}</div></div>`:""}
+    ${p.sources&&p.sources.length?`<div class="sources"><strong>Sources:</strong> ${p.sources.map(escapeHtml).join(" · ")}</div>`:""}
+  `;
+  const ov = document.getElementById("overlay");
+  ov.classList.add("open");
+  document.body.style.overflow="hidden";
+  document.querySelector(".iconbtn").focus();
+}
+function relationships(p){
+  const bits=[];
+  if(p.spouse&&p.spouse.length){ bits.push("Married to " + p.spouse.map(id=>byId[id]?.name||"—").join(", ")); }
+  if(p.children&&p.children.length){ bits.push("Children: " + p.children.map(id=>byId[id]?.name||"—").join(", ")); }
+  const parents = PEOPLE.filter(x=>x.children&&x.children.includes(p.id)).map(x=>x.name);
+  if(parents.length){ bits.unshift("Child of " + parents.join(" & ")); }
+  return bits.join(" · ");
+}
+function fact(k,v){ return `<div class="fact"><div class="k">${k}</div><div class="v">${escapeHtml(v)}</div></div>`; }
+function closeModal(){
+  document.getElementById("overlay").classList.remove("open");
+  document.body.style.overflow="";
+  if(lastFocus) lastFocus.focus();
+}
+
+/* ===================== QUILT ===================== */
+function tryQuiltImage(paths){
+  const img = document.getElementById("quiltImg");
+  let i=0;
+  const next=()=>{ if(i>=paths.length){img.style.display="none";return;} img.src=paths[i++]; };
+  img.onload=()=>{ img.style.display="block"; const fb=document.querySelector("#quiltFrame .fallback"); if(fb) fb.style.display="none"; };
+  img.onerror=next;
+  next();
+}
+function zoomQuilt(){
+  const src = document.getElementById("quiltImg").getAttribute("src");
+  const ov = document.getElementById("overlay");
+  document.getElementById("modalName").textContent = "Aunt Molly's Quilt";
+  document.getElementById("modalDates").textContent = "The Minnier Family Quilt · made c. 1880s";
+  document.getElementById("modalCap").textContent = "Every petal holds a name. The center holds the family's declaration.";
+  document.getElementById("modalPic").innerHTML = "";
+  document.getElementById("modalPic").style.display="none";
+  document.getElementById("modalBody").innerHTML = `
+    <div style="border:8px solid var(--navy);outline:3px solid var(--gold);outline-offset:-14px;border-radius:6px;overflow:hidden;aspect-ratio:4/3;display:grid;place-items:center;background:var(--navy-deep)">
+      ${src?`<img src="${escapeAttr(src)}" alt="The Minnier Family Quilt" style="width:100%;height:100%;object-fit:contain">`:`<div class="ph" style="width:100%;height:100%"></div>`}
+    </div>
+    <div class="notesblock" style="margin-top:18px"><div class="lbl">Molly's Story</div><div>Great-great-great-aunt Molly stitched the names of the family into a starburst — a Dresden plate of crimson, cream, and navy, crowned at the center with crossed flags and gold stars. It has hung as a landmark in their rural Pennsylvania town for generations, and it gave this archive its colors, its pattern, and its heart.</div></div>`;
+  ov.classList.add("open"); document.body.style.overflow="hidden";
+  document.querySelector(".iconbtn").focus();
+  // restore pic box for next person open
+  setTimeout(()=>{document.getElementById("modalPic").style.display="";},10);
+}
+
+/* ===================== SEARCH FROM HERO ===================== */
+function scrollSearch(e){
+  e.preventDefault();
+  const v = document.getElementById("heroSearch").value;
+  document.getElementById("search").value = v;
+  setView("cards");
+  renderCards();
+  document.getElementById("people").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+  return false;
+}
+
+/* ===================== ADD A MEMORY ===================== */
+function submitMemory(e){
+  e.preventDefault();
+  const name = document.getElementById("mName").value.trim();
+  const email = document.getElementById("mEmail").value.trim();
+  const who = document.getElementById("mWho").value.trim();
+  const msg = document.getElementById("mMsg").value.trim();
+
+  /* When Supabase is live, this writes to the `memories` table for Jack to approve.
+     Until then it opens a pre-filled email to Jack so nothing is lost. */
+  if(DATA_MODE==="supabase" && SUPABASE_URL){
+    fetch(`${SUPABASE_URL}/rest/v1/memories`,{
+      method:"POST",
+      headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`,"Content-Type":"application/json",Prefer:"return-minimal"},
+      body:JSON.stringify({submitter_name:name,submitter_email:email,about_name:who,message:msg,status:"pending"})
+    }).then(()=>alert("Sent to Jack. Thank you — he reviews every one.")).catch(()=>fallbackMail());
+  } else {
+    fallbackMail();
+  }
+  function fallbackMail(){
+    const body = `From: ${name} (${email})\nAbout: ${who||"(unspecified)"}\n\n${msg}`;
+    window.location.href = `mailto:jack@minnier-family.com?subject=${encodeURIComponent("Minnier archive — a memory from "+name)}&body=${encodeURIComponent(body)}`;
+  }
+  e.target.reset();
+  return false;
+}
+
+/* ===================== HELPERS ===================== */
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+function escapeAttr(s){return escapeHtml(s);}
+</script>
+
+<!--
+================================================================
+SUPABASE SETUP — the deterministic Phase-2 schema (run when ready)
+================================================================
+1) Create a Supabase project.
+2) In the SQL editor, run:
+
+   create table people (
+     id            text primary key,
+     name          text not null,
+     generation    text,
+     birth_date    text,
+     birth_place   text,
+     death_date    text,
+     death_place   text,
+     photo_url     text,
+     photo_caption text,
+     military_branch   text,
+     military_years    text,
+     military_conflict text,
+     spouse_ids   text[] default '{}',
+     child_ids    text[] default '{}',
+     notes        text,
+     sources      text[] default '{}',
+     created_at   timestamptz default now()
+   );
+
+   create table memories (
+     id             bigint generated always as identity primary key,
+     submitter_name text,
+     submitter_email text,
+     about_name     text,
+     message        text,
+     photo_url      text,
+     status         text default 'pending',   -- Jack approves: pending -> published
+     created_at     timestamptz default now()
+   );
+
+   -- Public can READ approved people; public can INSERT a memory; nothing else.
+   alter table people  enable row level security;
+   alter table memories enable row level security;
+   create policy "read people"     on people   for select using (true);
+   create policy "submit memory"   on memories for insert with check (true);
+
+3) Up top in this file, set:
+     DATA_MODE = "supabase";
+     SUPABASE_URL = "https://YOURPROJECT.supabase.co";
+     SUPABASE_ANON_KEY = "your-anon-key";
+   Done. Same site, now live and editable from Supabase's table view.
+================================================================
+DROP-INTO-GITHUB CHECKLIST
+- Put THIS file in the repo root as  index.html
+- (optional) make a /photos folder; drop the quilt photo in as
+  photos/IMG_9075.jpeg  — the hero picks it up automatically.
+- Person photos: filename goes in a person's "photo" field, file goes in /photos.
+================================================================
+-->
+</body>
+</html>
