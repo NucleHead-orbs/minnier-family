@@ -95,7 +95,7 @@
     box-shadow:0 0 0 3px var(--gold), 0 0 0 5px var(--navy);
     position:relative;
   }
-  .seal::after{content:"★";position:absolute;color:var(--gold);font-size:22px;text-shadow:0 1px 0 var(--navy-deep)}
+  .seal::after{content:"";position:absolute}
   .brand .name{font-family:var(--font-display);font-weight:900;font-size:1.5rem;line-height:1;color:var(--navy)}
   .brand .sub{font-size:.82rem;color:var(--crimson);font-style:italic;font-family:var(--font-body)}
 
@@ -316,6 +316,84 @@
     .hero{padding:46px 0 40px}
     nav.main a{padding:10px 12px;font-size:.95rem}
   }
+
+  /* ===================== ADMIN / EDIT ===================== */
+  .admin-only{display:none}
+  body.editing .admin-only{display:initial}
+  body.editing .admin-only.flex{display:inline-flex}
+  .editbadge{display:none}
+  body.editing .editbadge{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:var(--navy-deep);
+    font-weight:700;font-size:.82rem;padding:6px 10px 6px 12px;border-radius:999px}
+  .lockbtn{cursor:pointer;border:1px solid var(--navy-deep);background:rgba(0,0,0,.10);color:var(--navy-deep);
+    border-radius:6px;font-size:.72rem;font-weight:700;padding:3px 8px;font-family:var(--font-body)}
+  .lockbtn:hover{background:var(--navy-deep);color:var(--gold-soft)}
+
+  /* the secret crest sequence */
+  .sealstar{position:absolute;inset:0;display:grid;place-items:center;background:none;border:none;padding:0;line-height:1;
+    color:var(--gold);font-size:22px;text-shadow:0 1px 0 var(--navy-deep);cursor:default}
+  .unlock{cursor:default}
+  .unlock.pulse, .sealstar.pulse{cursor:pointer}
+  @keyframes pulseGlow{0%,100%{text-shadow:0 0 2px var(--gold);transform:scale(1)}
+    50%{text-shadow:0 0 12px var(--gold),0 0 20px var(--gold-soft);transform:scale(1.14)}}
+  .pulse{animation:pulseGlow 1.35s ease-in-out infinite}
+  #brandWord{transition:color .2s}
+  #brandWord.glitching{color:var(--gold);text-shadow:0 0 8px var(--gold)}
+  #brandWord.is-editor{color:var(--gold);text-shadow:0 0 8px var(--gold-soft);cursor:pointer}
+
+  #toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--navy-deep);
+    color:var(--gold-soft);padding:12px 24px;border-radius:999px;font-weight:600;font-family:var(--font-body);
+    box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:80;border:1px solid var(--gold)}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .addbtn{cursor:pointer;border:2px dashed var(--crimson);background:var(--card);color:var(--crimson);
+    border-radius:12px;padding:9px 16px;min-height:var(--tap);font-family:var(--font-body);font-weight:700;font-size:1rem}
+  .addbtn:hover{background:var(--crimson);color:var(--cream)}
+
+  /* per-person media: gallery + documents */
+  .media-sec{margin-top:18px}
+  .media-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .media-h .lbl{font-family:var(--font-display);color:var(--crimson);font-weight:700;font-size:1.05rem}
+  .btn.sm{min-height:38px;padding:7px 14px;font-size:.9rem;box-shadow:none}
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:10px}
+  .gitem{margin:0;position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--parchment);background:var(--parchment)}
+  .gitem img{width:100%;aspect-ratio:1;object-fit:cover;cursor:zoom-in;display:block}
+  .gitem figcaption{display:flex;gap:4px;justify-content:center;padding:5px;background:var(--card);flex-wrap:wrap}
+  .gitem figcaption.cap{font-size:.8rem;color:var(--ink-soft);justify-content:flex-start;padding:6px 8px}
+  .tinybtn{cursor:pointer;border:1px solid var(--parchment);background:var(--cream);color:var(--navy);
+    border-radius:6px;font-size:.82rem;padding:3px 8px;font-family:var(--font-body);font-weight:600}
+  .tinybtn:hover{background:var(--navy);color:var(--cream)}
+  .tinybtn.danger:hover{background:var(--crimson);color:var(--cream);border-color:var(--crimson)}
+  .filerow{display:flex;flex-direction:column;gap:8px}
+  .fileitem{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--cream);
+    border:1px solid var(--parchment);border-radius:8px;padding:9px 13px}
+  .fileitem a{color:var(--navy);text-decoration:none;font-weight:600}
+  .fileitem a:hover{text-decoration:underline}
+  .fileacts{display:flex;gap:6px;flex-shrink:0}
+  .media-empty{color:var(--ink-soft);font-style:italic;font-size:.92rem}
+  .card .editrow{display:flex;gap:8px;padding:0 18px 14px}
+  .card .minibtn{flex:1;cursor:pointer;border:1px solid var(--parchment);background:var(--cream);color:var(--navy);
+    border-radius:8px;padding:8px;font-family:var(--font-body);font-weight:600;font-size:.9rem}
+  .card .minibtn:hover{background:var(--navy);color:var(--cream)}
+  .card .minibtn.danger:hover{background:var(--crimson);color:var(--cream);border-color:var(--crimson)}
+
+  /* edit form (inside the shared modal) */
+  .editform label{display:block;font-weight:600;color:var(--navy);font-size:.95rem;margin:12px 0 4px}
+  .editform input, .editform textarea, .editform select{
+    width:100%;font-family:var(--font-body);font-size:1rem;padding:9px 12px;border-radius:9px;
+    border:2px solid var(--parchment);background:var(--cream);color:var(--ink)}
+  .editform input:focus,.editform textarea:focus,.editform select:focus{outline:none;border-color:var(--gold)}
+  .editform .two{display:flex;gap:12px;flex-wrap:wrap}
+  .editform .two > div{flex:1;min-width:140px}
+  .editform .hintline{font-size:.85rem;color:var(--ink-soft);margin-top:3px}
+  .editform textarea{min-height:90px;resize:vertical}
+
+  /* submissions panel */
+  .subcard{background:var(--card);border:1px solid var(--parchment);border-left:6px solid var(--gold);
+    border-radius:10px;padding:16px 18px;margin-bottom:14px}
+  .subcard .smeta{color:var(--ink-soft);font-size:.92rem;margin-bottom:6px}
+  .subcard .smsg{color:var(--ink);white-space:pre-wrap}
+  .subcard .sactions{display:flex;gap:10px;margin-top:12px}
+  .subcard .pill{font-size:.78rem;padding:3px 10px;border-radius:999px;background:var(--parchment);color:var(--navy-deep);font-weight:600}
 </style>
 </head>
 <body>
@@ -324,10 +402,10 @@
 <header class="site">
   <div class="wrap bar">
     <a class="brand" href="#top" aria-label="The Minnier Family — home">
-      <span class="seal" aria-hidden="true"></span>
+      <span class="seal" aria-hidden="true"><button type="button" class="sealstar pulse" id="sealStar" tabindex="-1">★</button></span>
       <span>
-        <span class="name">The Minnier Family</span><br/>
-        <span class="sub">Uncle Jack's Royale Directory of Degenerates</span>
+        <span class="name">The <span id="brandWord">Minnier</span> Family</span><br/>
+        <span class="sub">Uncle Jack's <span class="unlock" id="uRoyale">Royale</span> Directory of <span class="unlock" id="uDegen">Degenerates</span></span>
       </span>
     </a>
     <nav class="main" aria-label="Primary">
@@ -336,6 +414,11 @@
       <a href="#quilt">The Quilt</a>
       <a href="#jack">Jack</a>
       <a href="#memory">Add a Memory</a>
+      <a href="#submissions" class="admin-only">Submissions</a>
+      <span class="editbadge" id="editBadge">✎ Editor
+        <button type="button" class="lockbtn" onclick="lockEditor()">lock</button>
+        <button type="button" class="lockbtn" onclick="signOut(event)">sign out</button>
+      </span>
     </nav>
   </div>
   <div class="stitch" aria-hidden="true"></div>
@@ -372,6 +455,7 @@
         <button id="btnCards" aria-pressed="true" onclick="setView('cards')">Cards</button>
         <button id="btnTree" aria-pressed="false" onclick="setView('tree')">Tree</button>
       </div>
+      <button class="addbtn admin-only flex" onclick="openEdit(null)">+ Add person</button>
     </div>
 
     <div id="cardView"><div class="grid" id="cardGrid"></div></div>
@@ -407,8 +491,8 @@
       <div>
         <h2>Aunt Molly's Quilt</h2>
         <div class="rule" aria-hidden="true"></div>
-        <p>Made by great-great-great-aunt Molly, the Minnier Family Quilt is a landmark in their rural Pennsylvania town. Every petal of its starburst holds a family name, hand-embroidered in cursive with dates. At the center: crossed American flags, gold stars, and a written family declaration.</p>
-        <p>It is the soul of this whole archive. Its pattern, its colors, and its spirit shaped every page you'll find here.</p>
+        <p>Made by great-great-great-aunt Molly, the Minnier Family Quilt is a landmark in their rural Pennsylvania town. Every petal of its twelve starburst panels holds a hand-embroidered name, with the person's age stitched alongside in cursive.</p>
+        <p>At its heart: crossed Union flags, a Confederate flag, and gold stars, commemorating the <strong>Veterans of the Blue and Gray reunion at Gettysburg, June 29–July 6, 1938</strong> — the last great gathering of Civil War veterans. One full panel carries the Minnier name. It is the soul of this whole archive, and its colors and pattern shaped every page here.</p>
         <button class="btn ghost" onclick="zoomQuilt()">View the quilt up close</button>
       </div>
     </div>
@@ -464,7 +548,15 @@
   </div>
 </section>
 
-<!-- ===================== FOOTER ===================== -->
+<!-- ===================== SUBMISSIONS (admin only) ===================== -->
+<section class="block admin-only" id="submissions">
+  <div class="wrap">
+    <div class="sec-head"><h2>Submissions</h2><span class="hint" id="subHint">Awaiting Jack's review.</span></div>
+    <div class="rule" aria-hidden="true"></div>
+    <div id="subList"><div class="empty">Nothing waiting right now.</div></div>
+  </div>
+</section>
+
 <footer class="site">
   <div class="wrap">
     <div class="flagrule" aria-hidden="true"></div>
@@ -488,12 +580,51 @@
     </div>
     <div class="mbody" id="modalBody"></div>
     <div class="mfoot">
+      <button class="btn gold admin-only flex" id="modalEditBtn" style="margin-right:auto">Edit this person</button>
       <button class="btn ghost" onclick="window.print()">Print this card</button>
       <button class="btn" onclick="closeModal()">Close</button>
     </div>
   </div>
 </div>
 
+<!-- ===================== AUTH MODAL ===================== -->
+<div class="overlay" id="authOverlay" onclick="if(event.target===this)closeAuth()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle" style="max-width:460px">
+    <div class="top" aria-hidden="true"></div>
+    <button class="iconbtn" onclick="closeAuth()" aria-label="Close">✕</button>
+    <div class="mbody" style="padding:26px">
+      <h2 id="authTitle" style="margin:0 0 4px;color:var(--navy)">Editor access</h2>
+      <p style="color:var(--ink-soft);margin:0 0 16px">The crest knows you're an editor — now prove it's you. Enter your email and we'll send a one-tap link. No password.</p>
+      <div id="authForm">
+        <label style="display:block;font-weight:600;color:var(--navy);margin-bottom:6px">Email</label>
+        <input id="authEmail" type="email" placeholder="you@example.com"
+          style="width:100%;font-family:var(--font-body);font-size:1.05rem;padding:11px 14px;border-radius:10px;border:2px solid var(--parchment);background:var(--cream)" />
+        <div style="margin-top:16px"><button class="btn" onclick="sendLink()">Send my sign-in link</button></div>
+      </div>
+      <div id="authMsg" style="display:none;color:var(--navy);font-size:1.05rem;line-height:1.5"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== EDIT OVERLAY ===================== -->
+<div class="overlay" id="editOverlay" onclick="if(event.target===this)closeEdit()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+    <div class="top" aria-hidden="true"></div>
+    <button class="iconbtn" onclick="closeEdit()" aria-label="Close">✕</button>
+    <div class="mbody editform" style="padding:22px 26px">
+      <h2 id="editTitle" style="margin:0 0 10px;color:var(--navy)">Edit person</h2>
+      <div id="editFields"></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn ghost danger" id="editDeleteBtn" onclick="deletePerson()" style="margin-right:auto;display:none">Delete</button>
+      <button class="btn ghost" onclick="closeEdit()">Cancel</button>
+      <button class="btn" onclick="savePerson()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Supabase client (loads from CDN in the browser; site stays read-only if it can't) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ================================================================
    THE MINNIER LEGACY — data + behavior
@@ -507,7 +638,15 @@
 
 const DATA_MODE = "supabase";            // "static"  |  "supabase"  — now LIVE
 const SUPABASE_URL = "https://dmajuxcquifpoflzggol.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_E6ALn_PDACsAMXB5owuvvQ_MaV637OU"; // public key, safe in browser (read-only via RLS)
+const SUPABASE_ANON_KEY = "sb_publishable_E6ALn_PDACsAMXB5owuvvQ_MaV637OU"; // public key, safe in browser (RLS enforces who can write)
+
+// Supabase client (null if the library didn't load — site then runs read-only on the baked snapshot)
+const SB = (window.supabase && DATA_MODE === "supabase")
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+let IS_ADMIN = false;   // true after an allow-listed person signs in (server-checked)
+let editMode = false;   // UI revealed via the crest sequence (only effective when IS_ADMIN)
+let pendingEditor = false; // crest completed by a not-yet-signed-in person; engage after they sign in
 
 /* ----------------------------------------------------------------
    HOW JACK ADDS A PERSON  (no code knowledge required, just copy a block)
@@ -560,21 +699,24 @@ const FAMILY = [
 /* ================= DATA SOURCE (swappable seam) ================= */
 const DataSource = {
   async loadPeople(){
-    if(DATA_MODE === "supabase" && SUPABASE_URL){
+    // 1) Supabase client (preferred)
+    if(SB){
       try{
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/people?select=*&order=gen_order.asc,name.asc`, {
-          headers:{ apikey:SUPABASE_ANON_KEY, Authorization:`Bearer ${SUPABASE_ANON_KEY}` }
-        });
-        const rows = await res.json();
-        return rows.map(normalizeRow);
-      }catch(e){
-        console.warn("Supabase load failed, falling back to baked data:", e);
-        return FAMILY;
-      }
+        const { data, error } = await SB.from('people').select('*').order('gen_order',{ascending:true}).order('name',{ascending:true});
+        if(error) throw error;
+        if(data && data.length){ cacheSnapshot(data); return data.map(normalizeRow); }
+      }catch(e){ console.warn("Supabase load failed:", e); }
     }
+    // 2) last good cached load (works offline on the real site)
+    const cached = readSnapshot();
+    if(cached && cached.length) return cached.map(normalizeRow);
+    // 3) baked snapshot shipped in this file
     return FAMILY;
   }
 };
+// remember the last successful live load so an outage never shows an empty page
+function cacheSnapshot(rows){ try{ localStorage.setItem('minnier_people', JSON.stringify(rows)); }catch(e){} }
+function readSnapshot(){ try{ const s=localStorage.getItem('minnier_people'); return s?JSON.parse(s):null; }catch(e){ return null; } }
 // maps a flat Supabase row -> the shape the UI expects
 function normalizeRow(r){
   return {
@@ -590,10 +732,30 @@ function normalizeRow(r){
 
 /* ===================== STATE ===================== */
 let PEOPLE = [];
+let ATTACH = {};            // person_id -> [{id, kind, storage_path, file_name, url, ...}]
 let activeGen = "all";
 let activeBranch = "all";
 let view = "cards";
 const byId = {};
+
+async function loadAttachments(){
+  ATTACH = {};
+  if(!SB) return;
+  try{
+    const { data, error } = await SB.from('attachments').select('*').order('sort',{ascending:true});
+    if(error) throw error;
+    for(const a of data){
+      try{ a.url = SB.storage.from('media').getPublicUrl(a.storage_path).data.publicUrl; }catch(e){ a.url=""; }
+      (ATTACH[a.person_id] = ATTACH[a.person_id] || []).push(a);
+    }
+  }catch(e){ console.warn("attachments load failed", e); }
+}
+function findAtt(id){ for(const k in ATTACH){ const f=ATTACH[k].find(a=>a.id===id); if(f) return f; } return null; }
+function mainPhotoUrl(p){
+  if(p.photo) return p.photo;
+  const a = (ATTACH[p.id]||[]).find(x=>x.kind==='photo');
+  return a ? a.url : "";
+}
 
 // Generations are ordered by genOrder (lower = older). Labels are descriptive
 // and anchored on Jack, so adding older ancestors never forces a renumber.
@@ -614,6 +776,7 @@ function buildGenerations(){
 
   PEOPLE = await DataSource.loadPeople();
   PEOPLE.forEach(p => byId[p.id] = p);
+  await loadAttachments();
 
   buildGenerations();
   buildGenChips();
@@ -623,8 +786,115 @@ function buildGenerations(){
   renderHonor();
 
   document.getElementById("search").addEventListener("input", renderCards);
-  document.addEventListener("keydown", e => { if(e.key==="Escape") closeModal(); });
+  document.addEventListener("keydown", e => { if(e.key==="Escape"){ closeModal(); closeEdit(); closeAuth(); } });
+
+  setupAuth();
 })();
+
+/* ===================== AUTH + THE CREST SEQUENCE ===================== */
+async function setupAuth(){
+  wireSequence();                 // the crest works regardless; engaging requires a real session
+  if(!SB) return;
+  SB.auth.onAuthStateChange(()=>refreshAuthState());
+  await refreshAuthState();
+}
+async function refreshAuthState(){
+  let email = null;
+  try{ const { data } = await SB.auth.getUser(); email = data?.user?.email || null; }catch(e){}
+  if(email){
+    try{ const { data, error } = await SB.rpc('is_admin'); IS_ADMIN = !error && data === true; }
+    catch(e){ IS_ADMIN = false; }
+  } else { IS_ADMIN = false; }
+
+  if(IS_ADMIN && pendingEditor){ pendingEditor = false; closeAuth(); engageEditor(); }
+  if(!IS_ADMIN && editMode){ lockEditor(); }   // session lost -> lock the UI
+  renderCards();
+}
+
+/* ---- the sequence: star -> Royale -> Degenerates -> glitch "Editor" ---- */
+let seqStep = 0; // 0: awaiting star, 1: awaiting Royale, 2: awaiting Degenerates
+function setPulse(id,on){ const el=document.getElementById(id); if(el) el.classList.toggle('pulse',on); }
+function armSequence(){ seqStep=0; setPulse('sealStar',true); setPulse('uRoyale',false); setPulse('uDegen',false); }
+function wireSequence(){
+  const star=document.getElementById('sealStar');
+  const roy=document.getElementById('uRoyale');
+  const deg=document.getElementById('uDegen');
+  const word=document.getElementById('brandWord');
+  if(!star||!roy||!deg||!word) return;
+  const stop=e=>{ e.preventDefault(); e.stopPropagation(); };
+  star.addEventListener('click', e=>{ stop(e); if(editMode) return; seqStep=1; setPulse('sealStar',false); setPulse('uRoyale',true); });
+  roy.addEventListener('click',  e=>{ stop(e); if(editMode) return; if(seqStep===1){ seqStep=2; setPulse('uRoyale',false); setPulse('uDegen',true); } else armSequence(); });
+  deg.addEventListener('click',  e=>{ stop(e); if(editMode) return; if(seqStep===2){ setPulse('uDegen',false); seqStep=0; runGlitch(); } else armSequence(); });
+  word.addEventListener('click', e=>{ if(editMode){ stop(e); lockEditor(); } });
+  armSequence();
+}
+function runGlitch(){ glitchTo('brandWord','Editor', tryEngage); }
+function glitchTo(id,target,done){
+  const el=document.getElementById(id); if(!el){ done&&done(); return; }
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ el.textContent=target; done&&done(); return; }
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&@$*';
+  el.classList.add('glitching');
+  let frame=0; const total=20;
+  const iv=setInterval(()=>{
+    frame++;
+    let out='';
+    for(let i=0;i<target.length;i++){
+      out += (i < target.length*(frame/total)) ? target[i] : chars[Math.floor(Math.random()*chars.length)];
+    }
+    el.textContent=out;
+    if(frame>=total){ clearInterval(iv); el.textContent=target; el.classList.remove('glitching'); done&&done(); }
+  }, 45);
+}
+function tryEngage(){
+  if(IS_ADMIN){ engageEditor(); }
+  else if(SB){ pendingEditor=true; openAuth(); }
+  else { toast("Connect to the internet to sign in."); setTimeout(()=>{ document.getElementById('brandWord').textContent='Minnier'; armSequence(); }, 1600); }
+}
+function engageEditor(){
+  editMode = true;
+  document.body.classList.add('editing');
+  const bw=document.getElementById('brandWord'); bw.textContent='Editor'; bw.classList.add('is-editor');
+  loadSubmissions();
+  renderCards();
+  toast('Editor mode engaged.');
+}
+function lockEditor(){
+  editMode = false;
+  document.body.classList.remove('editing');
+  const bw=document.getElementById('brandWord'); if(bw){ bw.textContent='Minnier'; bw.classList.remove('is-editor'); }
+  armSequence();
+  renderCards();
+}
+function toast(msg){
+  let t=document.getElementById('toast');
+  if(!t){ t=document.createElement('div'); t.id='toast'; document.body.appendChild(t); }
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+function openAuth(e){ if(e&&e.preventDefault)e.preventDefault();
+  document.getElementById("authForm").style.display="block";
+  document.getElementById("authMsg").style.display="none";
+  document.getElementById("authOverlay").classList.add("open");
+  document.body.style.overflow="hidden";
+  setTimeout(()=>document.getElementById("authEmail").focus(),30);
+}
+function closeAuth(){ document.getElementById("authOverlay").classList.remove("open"); document.body.style.overflow="";
+  if(pendingEditor){ pendingEditor=false; const bw=document.getElementById('brandWord'); if(bw&&!editMode){ bw.textContent='Minnier'; armSequence(); } } }
+async function sendLink(){
+  const email = document.getElementById("authEmail").value.trim();
+  if(!email) return;
+  if(!SB){ alert("Sign-in needs an internet connection."); return; }
+  try{
+    const { error } = await SB.auth.signInWithOtp({ email, options:{ emailRedirectTo: window.location.origin } });
+    if(error) throw error;
+    document.getElementById("authForm").style.display="none";
+    const msg=document.getElementById("authMsg");
+    msg.style.display="block";
+    msg.innerHTML = `Check your email at <strong>${escapeHtml(email)}</strong> — tap the link and you'll drop right into Editor mode. You can close this window.`;
+  }catch(err){ alert("Couldn't send the link: " + (err.message||err)); }
+}
+async function signOut(e){ if(e&&e.preventDefault)e.preventDefault(); if(SB) await SB.auth.signOut(); lockEditor(); IS_ADMIN=false; toast('Signed out.'); }
 
 /* ===================== PEOPLE: cards ===================== */
 function currentFilter(){
@@ -661,8 +931,9 @@ function renderCards(){
 }
 
 function pic(p){
-  if(p.photo){
-    return `<img src="${escapeAttr(p.photo)}" alt="${escapeAttr(p.name)}"
+  const url = mainPhotoUrl(p);
+  if(url){
+    return `<img src="${escapeAttr(url)}" alt="${escapeAttr(p.name)}"
             onerror="this.parentNode.innerHTML='${phMarkup(p)}'">`;
   }
   return phMarkup(p);
@@ -762,8 +1033,9 @@ function openModal(id){
   document.getElementById("modalName").textContent = p.name;
   document.getElementById("modalDates").textContent = lifespan(p) + (p.birth?.place?` · ${p.birth.place}`:"");
   document.getElementById("modalCap").textContent = p.photoCaption || "";
-  document.getElementById("modalPic").innerHTML = p.photo
-    ? `<img src="${escapeAttr(p.photo)}" alt="${escapeAttr(p.name)}" onerror="this.parentNode.innerHTML='${phMarkup(p)}'">`
+  const headUrl = mainPhotoUrl(p);
+  document.getElementById("modalPic").innerHTML = headUrl
+    ? `<img src="${escapeAttr(headUrl)}" alt="${escapeAttr(p.name)}" onerror="this.parentNode.innerHTML='${phMarkup(p)}'">`
     : phMarkup(p);
 
   const rel = relationships(p);
@@ -775,8 +1047,11 @@ function openModal(id){
     ${rel?fact("Family", rel):""}
     ${p.notes?`<div class="notesblock"><div class="lbl">Jack's Notes</div><div>${escapeHtml(p.notes)}</div></div>`:""}
     ${p.sources&&p.sources.length?`<div class="sources"><strong>Sources:</strong> ${p.sources.map(escapeHtml).join(" · ")}</div>`:""}
+    ${mediaHtml(p)}
   `;
   const ov = document.getElementById("overlay");
+  const eb = document.getElementById("modalEditBtn");
+  if(eb){ eb.onclick = () => { closeModal(); openEdit(p.id); }; }
   ov.classList.add("open");
   document.body.style.overflow="hidden";
   document.querySelector(".iconbtn").focus();
@@ -809,18 +1084,20 @@ function zoomQuilt(){
   const src = document.getElementById("quiltImg").getAttribute("src");
   const ov = document.getElementById("overlay");
   document.getElementById("modalName").textContent = "Aunt Molly's Quilt";
-  document.getElementById("modalDates").textContent = "The Minnier Family Quilt · made c. 1880s";
-  document.getElementById("modalCap").textContent = "Every petal holds a name. The center holds the family's declaration.";
+  document.getElementById("modalDates").textContent = "The Minnier Family Quilt · Veterans of the Blue & Gray, Gettysburg 1938";
+  document.getElementById("modalCap").textContent = "Every petal holds a name and an age. The center holds the flags and the dedication.";
   document.getElementById("modalPic").innerHTML = "";
   document.getElementById("modalPic").style.display="none";
   document.getElementById("modalBody").innerHTML = `
-    <div style="border:8px solid var(--navy);outline:3px solid var(--gold);outline-offset:-14px;border-radius:6px;overflow:hidden;aspect-ratio:4/3;display:grid;place-items:center;background:var(--navy-deep)">
-      ${src?`<img src="${escapeAttr(src)}" alt="The Minnier Family Quilt" style="width:100%;height:100%;object-fit:contain">`:`<div class="ph" style="width:100%;height:100%"></div>`}
+    <div style="border:8px solid var(--navy);outline:3px solid var(--gold);outline-offset:-14px;border-radius:6px;overflow:hidden;display:grid;place-items:center;background:var(--navy-deep)">
+      ${src?`<img src="${escapeAttr(src)}" alt="The Minnier Family Quilt" style="width:100%;height:auto;display:block">`:`<div class="ph" style="width:100%;aspect-ratio:4/3"></div>`}
     </div>
-    <div class="notesblock" style="margin-top:18px"><div class="lbl">Molly's Story</div><div>Great-great-great-aunt Molly stitched the names of the family into a starburst — a Dresden plate of crimson, cream, and navy, crowned at the center with crossed flags and gold stars. It has hung as a landmark in their rural Pennsylvania town for generations, and it gave this archive its colors, its pattern, and its heart.</div></div>`;
+    <img src="quilt-detail.jpg" alt="A single starburst panel of the quilt, names hand-embroidered in blue"
+         style="width:100%;height:auto;border-radius:8px;margin-top:12px;border:1px solid var(--parchment)"
+         onerror="this.style.display='none'">
+    <div class="notesblock" style="margin-top:18px"><div class="lbl">Molly's Story</div><div>Aunt Molly stitched the family and community into a Dresden starburst — crimson, cream, and navy — crowned at the center with crossed Union flags, a Confederate flag, and gold stars. It commemorates the Veterans of the Blue and Gray in grand reunion at Gettysburg, June 29–July 6, 1938: the last great gathering of Civil War veterans, most in their nineties. One full panel carries the Minnier name. The quilt has hung as a landmark in their rural Pennsylvania town ever since, and it gave this archive its colors, its pattern, and its heart.</div></div>`;
   ov.classList.add("open"); document.body.style.overflow="hidden";
   document.querySelector(".iconbtn").focus();
-  // restore pic box for next person open
   setTimeout(()=>{document.getElementById("modalPic").style.display="";},10);
 }
 
@@ -843,14 +1120,12 @@ function submitMemory(e){
   const who = document.getElementById("mWho").value.trim();
   const msg = document.getElementById("mMsg").value.trim();
 
-  /* When Supabase is live, this writes to the `memories` table for Jack to approve.
-     Until then it opens a pre-filled email to Jack so nothing is lost. */
-  if(DATA_MODE==="supabase" && SUPABASE_URL){
-    fetch(`${SUPABASE_URL}/rest/v1/memories`,{
-      method:"POST",
-      headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`,"Content-Type":"application/json",Prefer:"return-minimal"},
-      body:JSON.stringify({submitter_name:name,submitter_email:email,about_name:who,message:msg,status:"pending"})
-    }).then(()=>alert("Sent to Jack. Thank you — he reviews every one.")).catch(()=>fallbackMail());
+  /* Writes to the `memories` table for Jack to review.
+     If the database can't be reached, opens a pre-filled email so nothing is lost. */
+  if(SB){
+    SB.from('memories').insert({submitter_name:name,submitter_email:email,about_name:who,message:msg,status:'pending'})
+      .then(({error})=>{ if(error) throw error; alert("Sent to Jack. Thank you — he reviews every one."); })
+      .catch(()=>fallbackMail());
   } else {
     fallbackMail();
   }
@@ -860,6 +1135,286 @@ function submitMemory(e){
   }
   e.target.reset();
   return false;
+}
+
+/* ===================== ADMIN: EDIT / ADD / DELETE PERSON ===================== */
+let editingId = null;
+
+function slugify(s){ return (s||"").toLowerCase().trim().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,40) || ("person_"+Date.now()); }
+
+function openEdit(id){
+  if(!IS_ADMIN) return;
+  editingId = id;
+  const p = id ? byId[id] : null;
+  document.getElementById("editTitle").textContent = p ? `Edit — ${p.name}` : "Add a person";
+  document.getElementById("editDeleteBtn").style.display = p ? "inline-flex" : "none";
+
+  const genOpts = GENERATIONS.map(g=>`<option value="${escapeAttr(g.label)}" data-order="${g.order}" ${p&&p.generation===g.label?"selected":""}>${escapeHtml(g.label)}</option>`).join("");
+  const peopleOpts = PEOPLE.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(x=>`<option value="${escapeAttr(x.id)}">${escapeHtml(x.name)} (${escapeAttr(x.id)})</option>`).join("");
+  const v = (x)=>escapeAttr(x||"");
+  const m = p&&p.military ? p.military : {branch:"",years:"",conflict:""};
+
+  document.getElementById("editFields").innerHTML = `
+    <datalist id="idlist">${peopleOpts}</datalist>
+    <label>Full name</label>
+    <input id="f_name" value="${v(p?.name)}" placeholder="e.g. Jacob Isaiah Snyder" />
+    <div class="two">
+      <div>
+        <label>Generation</label>
+        <select id="f_gen">${genOpts}<option value="__new__">➕ New generation…</option></select>
+      </div>
+      <div>
+        <label>Order <span class="hintline">(lower = older)</span></label>
+        <input id="f_order" type="number" value="${p?p.genOrder:90}" />
+      </div>
+    </div>
+    <div id="f_newgenwrap" style="display:none">
+      <label>New generation label</label>
+      <input id="f_newgen" placeholder="e.g. 4th Great-Grandparents" />
+    </div>
+    <div class="two">
+      <div><label>Born — date</label><input id="f_bd" value="${v(p?.birth?.date && p.birth.date!=='—'?p.birth.date:'')}" placeholder="e.g. 20 Jan 1859" /></div>
+      <div><label>Born — place</label><input id="f_bp" value="${v(p?.birth?.place)}" placeholder="Town, County, State" /></div>
+    </div>
+    <div class="two">
+      <div><label>Died — date <span class="hintline">(blank = living)</span></label><input id="f_dd" value="${v(p?.death?.date)}" placeholder="e.g. 17 Dec 1934" /></div>
+      <div><label>Died — place</label><input id="f_dp" value="${v(p?.death?.place)}" placeholder="Town, County, State" /></div>
+    </div>
+    <label>Photo URL <span class="hintline">(optional)</span></label>
+    <input id="f_photo" value="${v(p?.photo)}" placeholder="https://…" />
+    <label>Photo caption</label>
+    <input id="f_cap" value="${v(p?.photoCaption)}" />
+    <label style="color:var(--crimson);border-top:1px solid var(--parchment);padding-top:12px;margin-top:16px">Roll of Honor entry <span class="hintline">— fill the branch to add them to the Roll of Honor; leave blank if they didn't serve</span></label>
+    <div class="two">
+      <div><label>Military branch</label><input id="f_mb" value="${v(m.branch)}" placeholder="Army" /></div>
+      <div><label>Years</label><input id="f_my" value="${v(m.years)}" placeholder="1942–1945" /></div>
+      <div><label>Conflict</label><input id="f_mc" value="${v(m.conflict)}" placeholder="World War II" /></div>
+    </div>
+    <label>Spouse(s) <span class="hintline">— comma-separated ids (type to see the list)</span></label>
+    <input id="f_spouse" list="idlist" value="${v((p?.spouse||[]).join(', '))}" placeholder="e.g. marietta_snyder" />
+    <label>Children <span class="hintline">— comma-separated ids</span></label>
+    <input id="f_children" list="idlist" value="${v((p?.children||[]).join(', '))}" placeholder="e.g. irma_snyder, jack_wilford" />
+    <label>Notes / story</label>
+    <textarea id="f_notes" placeholder="Tell it the way you remember it.">${escapeHtml(p?.notes||"")}</textarea>
+    <label>Sources <span class="hintline">— comma-separated</span></label>
+    <input id="f_sources" value="${v((p?.sources||[]).join(', '))}" placeholder="Family tree, Headstone record" />
+    ${p?`<div class="hintline" style="margin-top:14px">id: <strong>${escapeHtml(p.id)}</strong> (permanent)</div>`:""}
+  `;
+  // generation <-> order helper
+  const genSel = document.getElementById("f_gen");
+  genSel.onchange = ()=>{
+    const newwrap=document.getElementById("f_newgenwrap");
+    if(genSel.value==="__new__"){ newwrap.style.display="block"; }
+    else{
+      newwrap.style.display="none";
+      const opt = genSel.selectedOptions[0];
+      if(opt && opt.dataset.order) document.getElementById("f_order").value = opt.dataset.order;
+    }
+  };
+
+  document.getElementById("editOverlay").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeEdit(){ document.getElementById("editOverlay").classList.remove("open"); document.body.style.overflow=""; editingId=null; }
+
+function splitIds(s){ return (s||"").split(",").map(x=>x.trim()).filter(Boolean); }
+
+async function savePerson(){
+  if(!IS_ADMIN || !SB){ alert("You need to be signed in to save."); return; }
+  const genSel = document.getElementById("f_gen");
+  let generation = genSel.value==="__new__" ? document.getElementById("f_newgen").value.trim() : genSel.value;
+  const name = document.getElementById("f_name").value.trim();
+  if(!name){ alert("A name is required."); return; }
+  if(!generation){ alert("Pick or name a generation."); return; }
+
+  const mb = document.getElementById("f_mb").value.trim();
+  const row = {
+    id: editingId || slugify(name),
+    name,
+    generation,
+    gen_order: parseInt(document.getElementById("f_order").value,10) || 90,
+    birth_date: document.getElementById("f_bd").value.trim(),
+    birth_place: document.getElementById("f_bp").value.trim(),
+    death_date: document.getElementById("f_dd").value.trim() || null,
+    death_place: document.getElementById("f_dp").value.trim() || null,
+    photo_url: document.getElementById("f_photo").value.trim(),
+    photo_caption: document.getElementById("f_cap").value.trim(),
+    military_branch: mb || null,
+    military_years: mb ? document.getElementById("f_my").value.trim() : null,
+    military_conflict: mb ? document.getElementById("f_mc").value.trim() : null,
+    spouse_ids: splitIds(document.getElementById("f_spouse").value),
+    child_ids: splitIds(document.getElementById("f_children").value),
+    notes: document.getElementById("f_notes").value.trim(),
+    sources: splitIds(document.getElementById("f_sources").value)
+  };
+  try{
+    const { error } = await SB.from('people').upsert(row);
+    if(error) throw error;
+    closeEdit();
+    await reloadPeople();
+  }catch(err){ alert("Save failed: " + (err.message||err)); }
+}
+
+async function deletePerson(){
+  if(!IS_ADMIN || !SB || !editingId) return;
+  const p = byId[editingId];
+  if(!confirm(`Remove ${p?p.name:"this person"} from the tree? This can't be undone.`)) return;
+  try{
+    const { error } = await SB.from('people').delete().eq('id', editingId);
+    if(error) throw error;
+    closeEdit();
+    await reloadPeople();
+  }catch(err){ alert("Delete failed: " + (err.message||err)); }
+}
+
+async function reloadPeople(){
+  PEOPLE = await DataSource.loadPeople();
+  for(const k in byId) delete byId[k];
+  PEOPLE.forEach(p=>byId[p.id]=p);
+  await loadAttachments();
+  buildGenerations(); buildGenChips(); buildBranchChips();
+  renderCards(); renderTree(); renderHonor();
+}
+
+/* ===================== ADMIN: SUBMISSIONS ===================== */
+async function loadSubmissions(){
+  if(!IS_ADMIN || !SB) return;
+  const host = document.getElementById("subList");
+  try{
+    const { data, error } = await SB.from('memories').select('*').eq('status','pending').order('created_at',{ascending:false});
+    if(error) throw error;
+    document.getElementById("subHint").textContent = data.length ? `${data.length} awaiting review` : "All caught up.";
+    if(!data.length){ host.innerHTML = `<div class="empty">Nothing waiting right now.</div>`; return; }
+    host.innerHTML = data.map(s=>`
+      <div class="subcard">
+        <div class="smeta"><strong>${escapeHtml(s.submitter_name||"Someone")}</strong>
+          ${s.submitter_email?` · ${escapeHtml(s.submitter_email)}`:""}
+          ${s.about_name?` · about <strong>${escapeHtml(s.about_name)}</strong>`:""}
+          · <span class="pill">pending</span></div>
+        <div class="smsg">${escapeHtml(s.message||"")}</div>
+        <div class="sactions">
+          <button class="btn" onclick="setSubStatus(${s.id},'approved')">Mark reviewed</button>
+          <button class="btn ghost" onclick="setSubStatus(${s.id},'dismissed')">Dismiss</button>
+        </div>
+      </div>`).join("");
+  }catch(err){ host.innerHTML = `<div class="empty">Couldn't load submissions: ${escapeHtml(err.message||String(err))}</div>`; }
+}
+async function setSubStatus(id, status){
+  if(!IS_ADMIN || !SB) return;
+  try{
+    const { error } = await SB.from('memories').update({status}).eq('id', id);
+    if(error) throw error;
+    loadSubmissions();
+  }catch(err){ alert("Update failed: " + (err.message||err)); }
+}
+
+/* ===================== MEDIA: photos gallery + documents ===================== */
+function mediaHtml(p){
+  const atts = ATTACH[p.id] || [];
+  const photos = atts.filter(a=>a.kind==='photo');
+  const docs   = atts.filter(a=>a.kind==='document');
+  let html = "";
+
+  if(photos.length || editMode){
+    html += `<div class="media-sec"><div class="media-h"><span class="lbl">Photos</span>`;
+    if(editMode) html += `<button class="btn gold sm" onclick="pickFiles('${p.id}','photo')">+ Add photos</button>`;
+    html += `</div>`;
+    if(photos.length){
+      html += `<div class="gallery">` + photos.map(a=>`
+        <figure class="gitem">
+          <img src="${escapeAttr(a.url)}" alt="${escapeAttr(a.file_name||p.name)}" loading="lazy" onclick="window.open('${escapeAttr(a.url)}','_blank')">
+          ${editMode ? `<figcaption>
+              <button class="tinybtn" title="Set as profile photo" onclick="setMainPhoto('${p.id}','${escapeAttr(a.url)}')">★</button>
+              <button class="tinybtn" title="Rename" onclick="renameAttachment(${a.id})">✎</button>
+              <button class="tinybtn danger" title="Remove" onclick="removeAttachment(${a.id})">✕</button>
+            </figcaption>` : (a.file_name ? `<figcaption class="cap">${escapeHtml(a.file_name)}</figcaption>` : "")}
+        </figure>`).join("") + `</div>`;
+    } else if(editMode){ html += `<div class="media-empty">No photos yet — add the first.</div>`; }
+    html += `</div>`;
+  }
+
+  if(docs.length || editMode){
+    html += `<div class="media-sec"><div class="media-h"><span class="lbl">Documents</span>`;
+    if(editMode) html += `<button class="btn gold sm" onclick="pickFiles('${p.id}','document')">+ Add document</button>`;
+    html += `</div>`;
+    if(docs.length){
+      html += `<div class="filerow">` + docs.map(a=>`
+        <div class="fileitem">
+          <a href="${escapeAttr(a.url)}" target="_blank" rel="noopener">📄 ${escapeHtml(a.file_name||"Document")}</a>
+          ${editMode ? `<span class="fileacts">
+              <button class="tinybtn" onclick="renameAttachment(${a.id})">Rename</button>
+              <button class="tinybtn danger" onclick="removeAttachment(${a.id})">Remove</button></span>` : ""}
+        </div>`).join("") + `</div>`;
+    } else if(editMode){ html += `<div class="media-empty">No documents yet.</div>`; }
+    html += `</div>`;
+  }
+  return html;
+}
+
+function pickFiles(personId, kind){
+  if(!IS_ADMIN || !SB){ toast("Sign in to upload."); return; }
+  let inp = document.getElementById("fileInput");
+  if(!inp){ inp = document.createElement("input"); inp.type="file"; inp.id="fileInput"; inp.style.display="none"; document.body.appendChild(inp); }
+  inp.accept = kind==='photo' ? "image/*" : ".pdf,.doc,.docx,.txt,.rtf,.pages,.heic,application/pdf";
+  inp.multiple = (kind==='photo');
+  inp.onchange = () => { const files=[...inp.files]; inp.value=""; uploadFiles(personId, kind, files); };
+  inp.click();
+}
+async function uploadFiles(personId, kind, files){
+  if(!IS_ADMIN || !SB || !files.length) return;
+  toast(`Uploading ${files.length} file${files.length>1?"s":""}…`);
+  let ok=0;
+  for(const file of files){
+    if(file.size > 30*1024*1024){ toast(`${file.name} is over 30 MB — skipped.`); continue; }
+    try{
+      const safe = file.name.replace(/[^a-zA-Z0-9._-]+/g,"_");
+      const path = `${personId}/${Date.now()}_${safe}`;
+      const { error:upErr } = await SB.storage.from('media').upload(path, file, {upsert:false, contentType:file.type||undefined});
+      if(upErr) throw upErr;
+      const { error:insErr } = await SB.from('attachments').insert({
+        person_id:personId, kind, storage_path:path, file_name:file.name, mime:file.type, sort: Date.now()%2000000000
+      });
+      if(insErr) throw insErr;
+      ok++;
+    }catch(err){ toast("Upload failed: " + (err.message||err)); }
+  }
+  await loadAttachments();
+  renderCards();
+  if(byId[personId]) openModal(personId);
+  if(ok) toast(`Added ${ok} file${ok>1?"s":""}.`);
+}
+async function renameAttachment(id){
+  if(!IS_ADMIN || !SB) return;
+  const cur = findAtt(id); if(!cur) return;
+  const name = prompt("Rename file:", cur.file_name||"");
+  if(name==null) return;
+  try{
+    const { error } = await SB.from('attachments').update({file_name:name.trim()}).eq('id', id);
+    if(error) throw error;
+    const pid = cur.person_id;
+    await loadAttachments(); renderCards(); if(byId[pid]) openModal(pid);
+  }catch(err){ toast("Rename failed: " + (err.message||err)); }
+}
+async function removeAttachment(id){
+  if(!IS_ADMIN || !SB) return;
+  const cur = findAtt(id); if(!cur) return;
+  if(!confirm("Remove this file? This can't be undone.")) return;
+  try{
+    await SB.storage.from('media').remove([cur.storage_path]);
+    const { error } = await SB.from('attachments').delete().eq('id', id);
+    if(error) throw error;
+    const pid = cur.person_id;
+    await loadAttachments(); renderCards(); if(byId[pid]) openModal(pid);
+    toast("Removed.");
+  }catch(err){ toast("Remove failed: " + (err.message||err)); }
+}
+async function setMainPhoto(personId, url){
+  if(!IS_ADMIN || !SB) return;
+  try{
+    const { error } = await SB.from('people').update({photo_url:url}).eq('id', personId);
+    if(error) throw error;
+    await reloadPeople(); openModal(personId); toast("Profile photo set.");
+  }catch(err){ toast("Failed: " + (err.message||err)); }
 }
 
 /* ===================== HELPERS ===================== */
