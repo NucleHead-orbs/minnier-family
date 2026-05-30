@@ -772,7 +772,7 @@ function buildGenerations(){
 (async function init(){
   document.getElementById("year").textContent = new Date().getFullYear();
   // quilt image: tries common filenames, degrades to the woven CSS fallback
-  tryQuiltImage(["photos/IMG_9075.jpeg","IMG_9075.jpeg","photos/quilt.jpg","quilt.jpg"]);
+  tryQuiltImage(["quilt.jpg"]);
 
   PEOPLE = await DataSource.loadPeople();
   PEOPLE.forEach(p => byId[p.id] = p);
