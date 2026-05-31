@@ -370,6 +370,21 @@
   .fileitem a:hover{text-decoration:underline}
   .fileacts{display:flex;gap:6px;flex-shrink:0}
   .media-empty{color:var(--ink-soft);font-style:italic;font-size:.92rem}
+
+  /* Jack's Archive — the 58th PA collection */
+  .archivegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}
+  .acard{background:var(--card);border:1px solid var(--parchment);border-radius:var(--r);overflow:hidden;
+    box-shadow:0 6px 18px var(--shadow);text-align:left;width:100%;cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease;display:flex;flex-direction:column}
+  .acard:hover,.acard:focus-visible{transform:translateY(-3px);box-shadow:0 12px 26px var(--shadow);outline:none}
+  .acard.kin{border:2px solid var(--gold)}
+  .acard .apic{aspect-ratio:4/5;background:var(--parchment);overflow:hidden}
+  .acard .apic img{width:100%;height:100%;object-fit:cover;filter:sepia(.12)}
+  .acard .abody{padding:14px 16px;display:flex;flex-direction:column;gap:3px}
+  .acard .arank{font-size:.85rem;color:var(--crimson);font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+  .acard .aname{font-family:var(--font-display);font-weight:700;font-size:1.25rem;color:var(--navy);line-height:1.1}
+  .acard .akin{margin-top:6px;display:inline-flex;align-items:center;gap:5px;align-self:flex-start;
+    background:var(--gold);color:var(--navy-deep);font-size:.78rem;font-weight:700;padding:3px 9px;border-radius:999px}
   .card .editrow{display:flex;gap:8px;padding:0 18px 14px}
   .card .minibtn{flex:1;cursor:pointer;border:1px solid var(--parchment);background:var(--cream);color:var(--navy);
     border-radius:8px;padding:8px;font-family:var(--font-body);font-weight:600;font-size:.9rem}
@@ -411,6 +426,7 @@
     <nav class="main" aria-label="Primary">
       <a href="#people">People</a>
       <a href="#honor">Roll of Honor</a>
+      <a href="#archive">Jack's Archive</a>
       <a href="#quilt">The Quilt</a>
       <a href="#jack">Jack</a>
       <a href="#memory">Add a Memory</a>
@@ -477,6 +493,19 @@
       <div class="branchfilter" id="branchChips" role="group" aria-label="Filter by branch"></div>
       <div class="honorgrid" id="honorGrid"></div>
     </div>
+  </div>
+</section>
+
+<!-- ===================== JACK'S ARCHIVE ===================== -->
+<section class="block" id="archive">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Jack's Archive</h2>
+      <span class="hint">Company I, 58th Pennsylvania Veteran Volunteers</span>
+    </div>
+    <div class="rule" aria-hidden="true"></div>
+    <p style="max-width:760px;color:var(--ink-soft);margin-top:0">The regiment our own John G. Snyder fought in during the Civil War — and the men Jack has spent a lifetime honoring, re-flagging their graves and keeping their faces from being forgotten. These portraits were restored by hand. The family's man is marked.</p>
+    <div class="archivegrid" id="archiveGrid"></div>
   </div>
 </section>
 
@@ -681,13 +710,13 @@ const FAMILY = [
   {id:"frances_james",name:"Frances Katherine James",generation:"Grandparents",genOrder:60,birth:{date:"4 May 1902",place:"Northumberland, PA"},death:{date:"15 Aug 2002",place:"Selinsgrove, Snyder Co, PA"},photo:"",photoCaption:"",military:null,spouse:["edward_urba"],children:["nancy_urba"],notes:"",sources:["Family tree (Ancestry export)"]},
   {id:"jack_wilford",name:"Jack Wilford Minnier",generation:"Parents",genOrder:70,birth:{date:"11 May 1920",place:"Sunbury, Northumberland Co, PA"},death:{date:"29 Jul 1999",place:"Sunbury, Northumberland Co, PA"},photo:"",photoCaption:"",military:null,spouse:["nancy_urba"],children:["michael_sr","jack","kathleen","susan"],notes:"",sources:["Family tree (Ancestry export)"]},
   {id:"nancy_urba",name:"Nancy Lois Urba",generation:"Parents",genOrder:70,birth:{date:"25 Jul 1926",place:"Stamford, Fairfield Co, CT"},death:{date:"04 Jun 2001",place:"Sunbury, Northumberland Co, PA"},photo:"",photoCaption:"",military:null,spouse:["jack_wilford"],children:["michael_sr","jack","kathleen","susan"],notes:"",sources:["Family tree (Ancestry export)"]},
-  {id:"michael_sr",name:"Michael Minnier",generation:"Jack's Generation",genOrder:80,birth:{date:"10 Jul 1947",place:"Sunbury, Northumberland Co, PA"},death:{date:"04 Jun 1995",place:"Philadelphia, PA"},photo:"",photoCaption:"Jack's older brother",military:null,spouse:["georgina"],children:["michael_j_1980"],notes:"",sources:["Family tree (Ancestry export)"]},
+  {id:"michael_sr",name:"Michael Minnier",generation:"Jack's Generation",genOrder:80,birth:{date:"10 Jul 1947",place:"Sunbury, Northumberland Co, PA"},death:{date:"04 Jun 1995",place:"Philadelphia, PA"},photo:"",photoCaption:"Jack's older brother · U.S. Marine Corps",military:{branch:"Marine Corps",years:"",conflict:""},spouse:["georgina"],children:["michael_j_1980"],notes:"",sources:["Family tree (Ancestry export)"]},
   {id:"georgina",name:"Georgina R Martin",generation:"Jack's Generation",genOrder:80,birth:{date:"c. 1958",place:""},death:null,photo:"",photoCaption:"",military:null,spouse:["michael_sr"],children:["michael_j_1980"],notes:"",sources:["Family tree (Ancestry export)"]},
   {id:"kathleen",name:"Kathleen Minnier",generation:"Jack's Generation",genOrder:80,birth:{date:"25 Aug 1950",place:"Sunbury, Northumberland Co, PA"},death:{date:"16 Sep 2021",place:"Shamokin Dam, Snyder Co, PA"},photo:"",photoCaption:"",military:null,spouse:["norman"],children:[],notes:"",sources:["Family tree (Ancestry export)"]},
   {id:"norman",name:"Norman L Showers",generation:"Jack's Generation",genOrder:80,birth:{date:"12 May 1947",place:"Lewisburg, Union Co, PA"},death:{date:"2 Feb 2007",place:"Port Trevorton, Snyder Co, PA"},photo:"",photoCaption:"",military:null,spouse:["kathleen"],children:[],notes:"",sources:["Family tree (Ancestry export)"]},
   {id:"susan",name:"Susan Minnier",generation:"Jack's Generation",genOrder:80,birth:{date:"8 Mar 1953",place:"Sunbury, Northumberland Co, PA"},death:{date:"11 Jun 1987",place:"Mifflinburg, Union Co, PA"},photo:"",photoCaption:"",military:null,spouse:["dale"],children:[],notes:"",sources:["Family tree (Ancestry export)"]},
   {id:"dale",name:"Dale Swartz",generation:"Jack's Generation",genOrder:80,birth:{date:"—",place:""},death:null,photo:"",photoCaption:"",military:null,spouse:["susan"],children:[],notes:"",sources:["Family tree (Ancestry export)"]},
-  {id:"jack",name:"Jack Minnier",generation:"Jack's Generation",genOrder:80,birth:{date:"1948",place:"Sunbury, Northumberland Co, PA"},death:null,photo:"",photoCaption:"Jack — Vietnam veteran, American Legion, family historian",military:{branch:"Army",years:"Vietnam era",conflict:"Vietnam War"},spouse:["val"],children:[],notes:"The keeper of the line. Vietnam veteran, American Legion post member, and the man who built this archive name by name. Every year he re-flags every veteran's grave in the county, by hand, alone. This whole site exists because of him.",sources:["Jack's own account","American Legion records"]},
+  {id:"jack",name:"Jack Minnier",generation:"Jack's Generation",genOrder:80,birth:{date:"1948",place:"Sunbury, Northumberland Co, PA"},death:null,photo:"",photoCaption:"Jack — U.S. Air Force, Vietnam · American Legion · family historian",military:{branch:"Air Force",years:"1968–1972",conflict:"Vietnam War"},spouse:["val"],children:[],notes:"The keeper of the line. The man who built this archive name by name, and who every year re-flags every veteran's grave in the county, by hand, alone. U.S. Air Force, 26 Jan 1968 – 25 Jan 1972. Basic at Amarillo AFB, helicopter maintenance at Sheppard AFB; 90th CAMS crew chief on UH-1F 65-7921, then volunteered for Vietnam with Air Force Advisor Team 3 at Bien Hoa AB. Finished at Kirtland AFB, Albuquerque. American Legion post member. This whole site exists because of him.",sources:["Jack's own account","American Legion records"]},
   {id:"val",name:"Valara Jean Wyant",generation:"Jack's Generation",genOrder:80,birth:{date:"1953",place:""},death:null,photo:"",photoCaption:"Jack's wife",military:null,spouse:["jack"],children:[],notes:"Jack's wife.",sources:["Family tree (Ancestry export)"]},
   {id:"michael_j_1980",name:"Michael J Minnier",generation:"The Next Generation",genOrder:90,birth:{date:"1980",place:""},death:null,photo:"",photoCaption:"",military:null,spouse:[],children:["emily","mason","miles"],notes:"",sources:["Family tree (Ancestry export)"]},
   {id:"heather",name:"Heather Williams",generation:"The Next Generation",genOrder:90,birth:{date:"—",place:""},death:null,photo:"",photoCaption:"",military:null,spouse:[],children:["mason","miles"],notes:"",sources:["Family tree (Ancestry export)"]},
@@ -751,6 +780,54 @@ async function loadAttachments(){
   }catch(e){ console.warn("attachments load failed", e); }
 }
 function findAtt(id){ for(const k in ATTACH){ const f=ATTACH[k].find(a=>a.id===id); if(f) return f; } return null; }
+
+/* Jack's Archive — the 58th PA collection (separate from the family tree) */
+let ARCHIVE = [];
+async function loadArchive(){
+  ARCHIVE = [];
+  if(!SB) return;
+  try{
+    const { data, error } = await SB.from('archive').select('*').order('sort',{ascending:true});
+    if(error) throw error;
+    ARCHIVE = data || [];
+  }catch(e){ console.warn("archive load failed", e); }
+}
+function renderArchive(){
+  const host = document.getElementById('archiveGrid');
+  if(!host) return;
+  if(!ARCHIVE.length){ host.innerHTML = `<div class="empty" style="grid-column:1/-1">The archive is being prepared.</div>`; return; }
+  host.innerHTML = ARCHIVE.map(a=>{
+    const kin = !!a.linked_person_id;
+    const onclick = kin ? `onclick="openModal('${escapeAttr(a.linked_person_id)}')"` : `onclick="openArchive('${escapeAttr(a.id)}')"`;
+    const img = a.photo_url
+      ? `<img src="${escapeAttr(a.photo_url)}" alt="${escapeAttr(a.rank?a.rank+' ':'')}${escapeAttr(a.name)}" loading="lazy" onerror="this.parentNode.innerHTML='<span class=ph style=width:100%;height:100%></span>'">`
+      : `<span class="ph" style="width:100%;height:100%"></span>`;
+    return `<button class="acard${kin?' kin':''}" ${onclick} aria-label="${escapeAttr(a.name)}">
+      <span class="apic">${img}</span>
+      <span class="abody">
+        ${a.rank?`<span class="arank">${escapeHtml(a.rank)}</span>`:""}
+        <span class="aname">${escapeHtml(a.name)}</span>
+        ${kin?`<span class="akin">★ Our blood</span>`:""}
+      </span>
+    </button>`;
+  }).join("");
+}
+function openArchive(id){
+  const a = ARCHIVE.find(x=>x.id===id); if(!a) return;
+  document.getElementById("modalPic").style.display="";
+  document.getElementById("modalName").textContent = (a.rank?a.rank+" ":"") + a.name;
+  document.getElementById("modalDates").textContent = a.unit || "Co. I, 58th PA Veteran Volunteers";
+  document.getElementById("modalCap").textContent = "";
+  document.getElementById("modalPic").innerHTML = a.photo_url
+    ? `<img src="${escapeAttr(a.photo_url)}" alt="${escapeAttr(a.name)}">`
+    : `<span class="ph" style="width:100%;height:100%"></span>`;
+  const eb=document.getElementById("modalEditBtn"); if(eb) eb.style.display="none";
+  document.getElementById("modalBody").innerHTML = `
+    ${a.notes?`<div class="notesblock"><div class="lbl">From Jack's Archive</div><div>${escapeHtml(a.notes)}</div></div>`:""}
+    <div class="sources"><strong>Unit:</strong> ${escapeHtml(a.unit||"Co. I, 58th PA Veteran Volunteers")}</div>`;
+  const ov=document.getElementById("overlay"); ov.classList.add("open"); document.body.style.overflow="hidden";
+  document.querySelector(".iconbtn").focus();
+}
 function mainPhotoUrl(p){
   if(p.photo) return p.photo;
   const a = (ATTACH[p.id]||[]).find(x=>x.kind==='photo');
@@ -772,11 +849,12 @@ function buildGenerations(){
 (async function init(){
   document.getElementById("year").textContent = new Date().getFullYear();
   // quilt image: tries common filenames, degrades to the woven CSS fallback
-  tryQuiltImage(["quilt.jpg"]);
+  tryQuiltImage(["photos/IMG_9075.jpeg","IMG_9075.jpeg","photos/quilt.jpg","quilt.jpg"]);
 
   PEOPLE = await DataSource.loadPeople();
   PEOPLE.forEach(p => byId[p.id] = p);
   await loadAttachments();
+  await loadArchive();
 
   buildGenerations();
   buildGenChips();
@@ -784,6 +862,7 @@ function buildGenerations(){
   renderCards();
   renderTree();
   renderHonor();
+  renderArchive();
 
   document.getElementById("search").addEventListener("input", renderCards);
   document.addEventListener("keydown", e => { if(e.key==="Escape"){ closeModal(); closeEdit(); closeAuth(); } });
@@ -1051,7 +1130,7 @@ function openModal(id){
   `;
   const ov = document.getElementById("overlay");
   const eb = document.getElementById("modalEditBtn");
-  if(eb){ eb.onclick = () => { closeModal(); openEdit(p.id); }; }
+  if(eb){ eb.style.display=""; eb.onclick = () => { closeModal(); openEdit(p.id); }; }
   ov.classList.add("open");
   document.body.style.overflow="hidden";
   document.querySelector(".iconbtn").focus();
