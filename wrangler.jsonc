@@ -1,12 +1,15 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "minnier-family",
+  "main": "src/worker.js",
   "compatibility_date": "2026-05-30",
   "observability": {
     "enabled": true
   },
+  // Only ./public is served. Config, source and .wrangler stay private.
   "assets": {
-    "directory": "."
+    "directory": "./public",
+    "binding": "ASSETS"
   },
   "compatibility_flags": [
     "nodejs_compat"

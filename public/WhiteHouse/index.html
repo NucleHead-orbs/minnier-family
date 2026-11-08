@@ -293,13 +293,45 @@ async function loadMembers() {
   return S.members;
 }
 const meName = () => cap(S.me);
+
+// ---------- calendar (read-only, Google is the record) ----------
+const CAL_ID = 'family11574325909658758561@group.calendar.google.com';
+const COLOR_VAR = { ink: 'var(--p-ink)', teal: 'var(--p-teal)', amber: 'var(--p-amber)', sky: 'var(--p-sky)', sage: 'var(--p-sage)', rose: 'var(--p-rose)' };
+async function calEvents(from, to) {
+  const key = from + '|' + to;
+  S.cache.cal = S.cache.cal || {};
+  const hit = S.cache.cal[key];
+  if (hit && Date.now() - hit.at < 5 * 60 * 1000) return hit.events;
+  try {
+    const { data } = await sb.auth.getSession();
+    const token = data && data.session && data.session.access_token;
+    const r = await fetch('/WhiteHouse/api/calendar?from=' + from + '&to=' + to, { headers: { Authorization: 'Bearer ' + token } });
+    if (!r.ok) return null;
+    const j = await r.json();
+    S.cache.cal[key] = { at: Date.now(), events: j.events || [] };
+    return j.events || [];
+  } catch (e) { console.error(e); return null; }
+}
+// Whose event: the first family member named in the title (word match), else the whole family.
+function whoOf(title) {
+  const t = ' ' + String(title || '').toLowerCase().replace(/[^a-z]+/g, ' ') + ' ';
+  return S.members.find((m) => t.includes(' ' + m.name.toLowerCase() + ' ')) || null;
+}
+const timeOf = (iso8601) => new Date(iso8601).toLocaleTimeString('en-US', { timeZone: 'America/Phoenix', hour: 'numeric', minute: '2-digit' });
+function eventItem(e) {
+  const m = whoOf(e.title);
+  const when = e.allDay ? (e.endDay > e.startDay ? 'All day, through ' + fmtDay(e.endDay, { weekday: 'short', month: 'short', day: 'numeric' }) : 'All day') : timeOf(e.start) + ' – ' + timeOf(e.end);
+  return { day: e.startDay, sort: e.allDay ? '0' : '1' + e.start, title: e.title, meta: when + (e.location ? ' · ' + e.location : '') + (m ? ' · ' + m.name : ''), dot: m ? (COLOR_VAR[m.color] || 'var(--p-teal)') : 'var(--accent)', kind: 'event' };
+}
+const calAddLink = 'https://calendar.google.com/calendar/render?action=TEMPLATE&src=' + encodeURIComponent(CAL_ID);
 const otherKey = () => (S.me === 'mike' ? 'heather' : 'mike');
 
 // ---------- views ----------
 async function viewToday() {
   const today = iso(tzToday());
   const in7 = iso(new Date(tzToday().getTime() + 7 * 86400000));
-  const [bills, todos, budget, projects, goals] = await Promise.all([
+  const [events, bills, todos, budget, projects, goals] = await Promise.all([
+    calEvents(today, in7),
     q(sb.from('v_upcoming_bills').select('*').lte('next_due', in7).order('next_due'), 'load bills'),
     q(sb.from('todos').select('*').eq('done', false).order('due_on', { nullsFirst: false }), 'load to-dos'),
     q(sb.from('v_month_budget').select('*').eq('belongs_to', S.me), 'load your budget'),
@@ -324,9 +356,10 @@ async function viewToday() {
     h += '<section class="section rise d2"><div class="card pad"><div class="eyebrow">All clear</div><p style="margin:8px 0 0" class="muted">Nothing needs you in the next few days.</p></div></section>';
   }
   h += '<section class="section rise d3"><div class="section-head"><h2>This week</h2><a class="link" href="#calendar">Calendar →</a></div>';
-  const week = bills.map((b) => ({ day: b.next_due, title: b.label, meta: money(b.amount) + (b.autopay ? ' · Autopay' : ' · Pay by hand'), dot: b.belongs_to === 'joint' ? 'var(--p-amber)' : 'var(--p-teal)' }))
-    .concat(todos.filter((t) => t.due_on && t.due_on <= in7).map((t) => ({ day: t.due_on, title: t.title, meta: 'To-do', dot: 'var(--p-sage)' })))
-    .sort((a, b) => (a.day < b.day ? -1 : 1));
+  const week = (events || []).map(eventItem)
+    .concat(bills.map((b) => ({ day: b.next_due, sort: '2', title: b.label, meta: 'Bill · ' + money(b.amount) + (b.autopay ? ' · Autopay' : ' · Pay by hand'), dot: 'var(--p-amber)' })))
+    .concat(todos.filter((t) => t.due_on && t.due_on <= in7).map((t) => ({ day: t.due_on, sort: '3', title: t.title, meta: 'To-do', dot: 'var(--p-sage)' })))
+    .sort((a, b) => (a.day + a.sort < b.day + b.sort ? -1 : 1));
   h += week.length ? '<div class="card list">' + week.map((w) => '<div class="row"><div class="date-chip"><div class="m">' + esc(mon(w.day)) + '</div><div class="d">' + esc(dnum(w.day)) + '</div></div><div class="grow"><div class="row-title">' + esc(w.title) + '</div><div class="tiny muted" style="display:flex;align-items:center;gap:8px"><span class="dot" style="background:' + w.dot + '"></span>' + esc(w.meta) + '</div></div></div>').join('') + '</div>'
     : '<div class="empty">A quiet week. Nothing scheduled yet.</div>';
   h += '</section>';
@@ -350,22 +383,33 @@ const statusWord = (s) => ({ planning: 'Planning', in_progress: 'In progress', d
 
 async function viewCalendar() {
   const today = tzToday();
-  const in30 = iso(new Date(today.getTime() + 30 * 86400000));
-  const [bills, todos] = await Promise.all([
-    q(sb.from('v_upcoming_bills').select('*').lte('next_due', in30).order('next_due'), 'load bills'),
-    q(sb.from('todos').select('*').eq('done', false).not('due_on', 'is', null).lte('due_on', in30).order('due_on'), 'load to-dos')
+  const from = iso(today);
+  const to = iso(new Date(today.getTime() + 30 * 86400000));
+  const [events, bills, todos] = await Promise.all([
+    calEvents(from, to),
+    q(sb.from('v_upcoming_bills').select('*').lte('next_due', to).order('next_due'), 'load bills'),
+    q(sb.from('todos').select('*').eq('done', false).not('due_on', 'is', null).lte('due_on', to).order('due_on'), 'load to-dos')
   ]);
-  const items = bills.map((b) => ({ day: b.next_due, title: b.label, meta: money(b.amount) + (b.autopay ? ' · Autopay' : ' · Pay by hand') + (b.belongs_to === 'joint' ? ' · Shared' : ''), dot: b.belongs_to === 'joint' ? 'var(--p-amber)' : 'var(--p-teal)' }))
-    .concat(todos.filter((t) => t.owner === S.me || t.owner === 'joint').map((t) => ({ day: t.due_on, title: t.title, meta: 'To-do', dot: 'var(--p-sage)' })));
+  const show = S.calShow || 'all';
+  let items = (events || []).map(eventItem);
+  if (show === 'all') {
+    items = items.concat(bills.map((b) => ({ day: b.next_due, sort: '2', title: b.label, meta: 'Bill · ' + money(b.amount) + (b.autopay ? ' · Autopay' : ' · Pay by hand') + (b.belongs_to === 'joint' ? ' · Shared' : ''), dot: 'var(--p-amber)' })))
+      .concat(todos.filter((t) => t.owner === S.me || t.owner === 'joint').map((t) => ({ day: t.due_on, sort: '3', title: t.title, meta: 'To-do', dot: 'var(--p-sage)' })));
+  }
   const byDay = {};
   items.forEach((i) => { (byDay[i.day] = byDay[i.day] || []).push(i); });
-  const days = Object.keys(byDay).sort();
-  let h = '<section class="hero rise d1"><div class="eyebrow">' + esc(today.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })) + '</div><h1>Calendar</h1></section>';
-  h += '<section class="section rise d2"><div class="card pad"><div class="eyebrow">Google Calendar</div><p style="margin:8px 0 0">Family events, school and appointments will show here once your Google Calendar is connected. Until then, this shows bills and to-dos by day.</p></div></section>';
-  h += '<section class="section rise d3">' + (days.length ? days.map((d) => '<div style="padding-top:22px"><div style="display:flex;align-items:baseline;gap:10px"><h2>' + esc(cap(whenLabel(d))) + '</h2><span class="small muted">' + esc(fmtDay(d)) + '</span></div><div class="card list" style="margin-top:12px">' +
+  Object.values(byDay).forEach((list) => list.sort((a, b) => (a.sort < b.sort ? -1 : 1)));
+  const days = Object.keys(byDay).filter((d) => d >= from).sort();
+  const people = S.members.filter((m) => m.color);
+  let h = '<section class="hero rise d1"><div class="eyebrow">' + esc(today.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })) + '</div><h1>Calendar</h1>' +
+    '<div class="chips" style="margin-top:18px">' + [['all', 'Everything'], ['events', 'Calendar only']].map(([k, l]) => '<button class="pill press' + (k === show ? ' on' : '') + '" data-action="cal-show" data-v="' + k + '">' + l + '</button>').join('') + '</div>' +
+    '<div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px 16px">' + people.map((m) => '<span class="tiny muted" style="display:inline-flex;align-items:center;gap:8px;font-weight:600"><span class="dot" style="background:' + (COLOR_VAR[m.color] || 'var(--accent)') + '"></span>' + esc(m.name) + '</span>').join('') + '<span class="tiny muted" style="display:inline-flex;align-items:center;gap:8px;font-weight:600"><span class="dot" style="background:var(--accent)"></span>Family</span></div></section>';
+  if (events === null) h += '<section class="section rise d2" style="padding-top:20px"><div class="warm-card"><div class="eyebrow warm">Calendar didn’t load</div><p style="margin:8px 0 0">Google didn’t answer just now. Bills and to-dos are still here; try again in a minute.</p></div></section>';
+  h += '<section class="section rise d3" style="padding-top:4px">' + (days.length ? days.map((d) => '<div style="padding-top:26px"><div style="display:flex;align-items:baseline;gap:10px"><h2>' + esc(cap(whenLabel(d))) + '</h2><span class="small muted">' + esc(fmtDay(d)) + '</span></div><div class="card list" style="margin-top:12px">' +
     byDay[d].map((i) => '<div class="row"><span style="width:4px;align-self:stretch;border-radius:999px;background:' + i.dot + '"></span><div class="grow"><div class="row-title">' + esc(i.title) + '</div><div class="small muted">' + esc(i.meta) + '</div></div></div>').join('') + '</div></div>').join('')
-    : '<div class="empty">Nothing in the next 30 days.</div>') + '</section>';
-  h += '<section class="section rise d4"><button class="btn press" data-action="todo-add">Add a to-do</button></section>';
+    : '<div class="empty" style="margin-top:20px">Nothing in the next 30 days.</div>') + '</section>';
+  h += '<section class="section rise d4 stack"><a class="btn press" href="' + calAddLink + '" target="_blank" rel="noopener">Add to the family calendar</a><button class="btn ghost press" data-action="todo-add">Add a to-do</button>' +
+    '<div class="notice" style="justify-content:center">' + icon.sync + 'From your family Google Calendar · Put a name in an event’s title to give it that person’s color</div></section>';
   return h;
 }
 
@@ -483,7 +527,10 @@ async function viewKids(arg) {
     const n = byLabel[l];
     return '<button class="tile lift" style="text-align:left;cursor:pointer;min-height:108px" data-action="care-edit" data-kid="' + esc(kid.id) + '" data-label="' + esc(l) + '"><span class="label" style="color:var(--accent)">' + esc(l) + '</span><span class="t" style="font-size:16px">' + (n && n.value ? esc(n.value) : '<span class="muted" style="font-weight:500">Add</span>') + '</span></button>';
   }).join('') + '</div></section>';
-  h += '<section class="section rise d5"><div class="card pad"><div class="eyebrow">This week</div><p style="margin:8px 0 0" class="muted">Practices, appointments and pickups will show here from Google Calendar once it’s connected.</p></div></section>';
+  const from = iso(tzToday()), to = iso(new Date(tzToday().getTime() + 7 * 86400000));
+  const evs = await calEvents(from, to);
+  const mine = (evs || []).filter((e) => { const w = whoOf(e.title); return w && w.id === kid.id; }).map(eventItem);
+  h += '<section class="section rise d5"><div class="section-head"><h2>This week</h2><a class="link" href="#calendar">Calendar →</a></div>' + (evs === null ? '<div class="empty">The calendar didn’t load just now.</div>' : mine.length ? '<div class="card list">' + mine.map((i) => '<div class="row"><div class="date-chip"><div class="m">' + esc(fmtDay(i.day, { weekday: 'short' })) + '</div><div class="d">' + esc(dnum(i.day)) + '</div></div><div class="grow"><div class="row-title">' + esc(i.title) + '</div><div class="small muted">' + esc(i.meta.replace(' · ' + kid.name, '')) + '</div></div></div>').join('') + '</div>' : '<div class="empty">Nothing on the calendar for ' + esc(kid.name) + ' this week. Events with “' + esc(kid.name) + '” in the title show up here.</div>') + '</section>';
   return h;
 }
 
@@ -650,6 +697,7 @@ const ACTIONS = {
       async (fd) => { await q(sb.from('care_notes').upsert({ member_id: el.dataset.kid, label: el.dataset.label, value: String(fd.get('value') || '').trim(), sort: CARE_LABELS.indexOf(el.dataset.label), updated_at: new Date().toISOString() }, { onConflict: 'member_id,label' }), 'save the note'); toast('Saved'); render(); });
   },
   'home-filter': (el) => { S.homeFilter = el.dataset.v; render(); },
+  'cal-show': (el) => { S.calShow = el.dataset.v; render(); },
   'idea-filter': (el) => { S.ideaFilter = el.dataset.v; render(); },
   'project-edit': async (el) => {
     let p = null;
