@@ -7,6 +7,14 @@
 <meta name="theme-color" content="#101819" media="(prefers-color-scheme: dark)">
 <meta name="robots" content="noindex, nofollow">
 <title>The Minnier House</title>
+<!-- BRAND_V1 -->
+<!-- HOUSE_GLOW_V1 -->
+<script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("intro-pending");setTimeout(function(){document.documentElement.classList.remove("intro-pending")},5000)}</script>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/minnier/icon-32.png">
+<link rel="apple-touch-icon" href="/assets/minnier/icon-180.png">
+<link rel="manifest" href="/WhiteHouse/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="Minnier House">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -51,7 +59,10 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* header + nav */
 .top{display:flex;align-items:center;justify-content:space-between;padding:calc(20px + env(safe-area-inset-top)) 0 0}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-.brand span{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.mark{display:inline-flex;align-items:center;justify-content:center;background:#0C1517;border-radius:10px;padding:5px 7px;line-height:0}
+.mark img{height:22px;width:auto;display:block}
+.center .mark{border-radius:16px;padding:10px 13px}.center .mark img{height:40px}
+.brand span{font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase}
 .icon-btn{width:44px;height:44px;border-radius:999px;border:1px solid var(--line);background:var(--surface);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
 .nav{display:flex;gap:8px;overflow-x:auto;padding:18px 0 4px;margin:0 -20px;padding-left:20px;padding-right:20px;scrollbar-width:none;position:sticky;top:0;z-index:5;background:var(--bg)}
 .nav::-webkit-scrollbar{display:none}
@@ -157,9 +168,25 @@ textarea.input{min-height:96px;resize:vertical}
 }
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .center{min-height:80vh;display:flex;flex-direction:column;justify-content:center}
+
+/* load intro: glowing house outline draws behind, logo fades in.
+   The one motion exception: stroke-dashoffset on this single background drawing, once per page load. */
+#app{position:relative;z-index:1}
+.glowhouse{position:fixed;z-index:0;left:50%;top:calc(env(safe-area-inset-top) + 6vh);width:min(640px,118vw);height:auto;
+  transform:translateX(-50%);pointer-events:none;color:var(--accent);opacity:0;--rest:.16;
+  filter:drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 14px color-mix(in srgb,var(--accent) 55%,transparent))}
+.glowhouse path{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.glowhouse path.idx{stroke-width:2.6}
+.glowhouse.rest{opacity:var(--rest)}
+:root[data-theme="dark"] .glowhouse{--rest:.24}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .glowhouse{--rest:.24}}
+.intro-pending .mark{opacity:0}
+@keyframes markIn{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:none}}
+.intro .mark{animation:markIn 1s var(--ease) .75s both}
 </style>
 </head>
 <body>
+<svg id="glowhouse" class="glowhouse" viewBox="0 0 600 520" aria-hidden="true" focusable="false"><path d="M24 470H576" class="idx"/><path d="M100 262V470M500 262V470" class="idx"/><path d="M50 262L300 66L550 262" class="idx"/><path d="M50 262H550"/><path d="M392 138V96H436V173M384 96H444"/><path d="M268 470V362A32 32 0 0 1 332 362V470" class="idx"/><path d="M318 418h6" class="idx"/><path d="M148 310H228V394H148Z"/><path d="M188 310V394M148 352H228"/><path d="M372 310H452V394H372Z"/><path d="M412 310V394M372 352H452"/><path d="M278 190a22 22 0 1 0 44 0a22 22 0 1 0-44 0"/><path d="M300 168V212M278 190H322"/></svg>
 <div id="app" class="wrap" aria-live="polite"></div>
 <div id="toast" class="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -195,7 +222,7 @@ const whenLabel = (s) => { const n = daysFromToday(s); if (n == null) return '';
 const cap = (s) => String(s || '').charAt(0).toUpperCase() + String(s || '').slice(1);
 const pct = (a, b) => (b > 0 ? Math.max(0, Math.min(100, Math.round((a / b) * 100))) : 0);
 const icon = {
-  house: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg>',
+  house: '<span class="mark"><img src="/assets/minnier/monogram-dark.png" alt="" width="33" height="22"></span>',
   moon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
   sun: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
   auto: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg>',
@@ -844,6 +871,32 @@ function viewPrivate() {
 }
 
 let renderSeq = 0;
+let introDone = false;
+function intro() {
+  if (introDone) return; introDone = true;
+  const root = document.documentElement, gh = document.getElementById('glowhouse');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  root.classList.remove('intro-pending');
+  if (!gh) return;
+  if (calm || !gh.animate) { gh.classList.add('rest'); return; }
+  const paths = Array.from(gh.querySelectorAll('path')), STEP = 85, DRAW = 1500, ease = 'cubic-bezier(.3,.6,.2,1)';
+  paths.forEach((p, i) => {
+    const L = (p.getTotalLength && p.getTotalLength()) || 200;
+    p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+    p.animate([{ strokeDashoffset: L }, { strokeDashoffset: 0 }], { duration: DRAW, delay: 100 + i * STEP, easing: ease, fill: 'forwards' });
+  });
+  root.classList.add('intro');
+  const rest = parseFloat(getComputedStyle(gh).getPropertyValue('--rest')) || 0.2;
+  gh.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, easing: 'ease-out', fill: 'forwards' });
+  const settle = gh.animate([{ opacity: 1 }, { opacity: rest }], { duration: 1400, delay: 100 + paths.length * STEP + DRAW, easing: ease, fill: 'forwards' });
+  settle.onfinish = () => {
+    paths.forEach((p) => { p.style.strokeDashoffset = 0; });
+    gh.classList.add('rest');
+    gh.getAnimations({ subtree: true }).forEach((a) => a.cancel());
+  };
+  setTimeout(() => root.classList.remove('intro'), 2000);
+}
+
 async function render() {
   const seq = ++renderSeq;
   const { data } = await sb.auth.getSession();
@@ -872,7 +925,7 @@ async function render() {
   }
 }
 sb.auth.onAuthStateChange((evt) => { if (evt === 'SIGNED_IN' || evt === 'SIGNED_OUT') { S.me = null; render(); } });
-render();
+render().finally(intro);
 </script>
 </body>
 </html>
