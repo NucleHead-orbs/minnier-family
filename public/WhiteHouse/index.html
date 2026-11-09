@@ -667,7 +667,7 @@ const CADENCES = [['monthly', 'Monthly'], ['weekly', 'Weekly'], ['biweekly', 'Ev
 
 const ACTIONS = {
   theme: () => nextTheme(),
-  signout: async () => { await sb.auth.signOut(); S.me = null; S.members = []; location.hash = ''; render(); },
+  signout: async () => { await sb.auth.signOut({ scope: 'local' }); S.me = null; S.members = []; location.hash = ''; render(); },
   'todo-add': () => openSheet('<h2>Add a to-do</h2>' + fieldText('title', 'What needs doing?', '', 'required maxlength="200"') + '<div class="row2">' + fieldText('due_on', 'Due', '', 'type="date"') + fieldSelect('owner', 'Whose', [['joint', 'Both of us'], [S.me, 'Mine']], 'joint') + '</div>' + sheetActions('Add'),
     async (fd) => { const title = String(fd.get('title') || '').trim(); if (!title) { toast('Give it a short name.'); return false; }
       await q(sb.from('todos').insert({ title, due_on: fd.get('due_on') || null, owner: fd.get('owner') }), 'add that'); toast('Added'); render(); }),
@@ -846,25 +846,73 @@ document.addEventListener('click', (e) => {
 });
 
 // ---------- auth + render ----------
+// CODE_SIGNIN_V1: email a 6-digit code (the link in the email still works too).
+// The code is typed where she is, so it works inside a home-screen icon,
+// which keeps its own sign-in separate from Safari.
+const PENDING_KEY = 'wh-pending-signin';
+function pendingEmail() {
+  try { const p = JSON.parse(localStorage.getItem(PENDING_KEY) || 'null'); if (p && Date.now() - p.at < 3600e3) return p.email; } catch (e) {}
+  return null;
+}
+function setPending(email) { try { email ? localStorage.setItem(PENDING_KEY, JSON.stringify({ email, at: Date.now() })) : localStorage.removeItem(PENDING_KEY); } catch (e) {} }
 function viewSignIn(sent) {
   return '<div class="center"><div class="rise d1" style="display:flex;align-items:center;gap:10px">' + icon.house + '<span class="eyebrow" style="color:var(--ink);letter-spacing:.2em;font-size:12px">The Minnier House</span></div>' +
     '<h1 class="rise d2" style="font-size:44px">' + (sent ? 'Check your email.' : 'Welcome home.') + '</h1>' +
-    (sent ? '<p class="lede rise d3">We sent a sign-in link to <strong>' + esc(sent) + '</strong>. Open it on this phone and you’re in.</p><button class="btn ghost press rise d4" style="margin-top:24px" data-action="back-signin">Use a different email</button>'
-      : '<p class="lede rise d3">Our calendar, money, kids, projects and photos, all in one place.</p><form id="signin" class="rise d4" style="margin-top:24px"><label class="field"><span>Your email</span><input class="input" type="email" name="email" autocomplete="email" required placeholder="you@example.com"></label><button class="btn press" style="margin-top:16px" type="submit">Send my sign-in link</button></form><p class="tiny muted rise d5" style="margin-top:16px">No password. We email you a link each time.</p>') + '</div>';
+    (sent
+      ? '<p class="lede rise d3">We sent a 6-digit code to <strong>' + esc(sent) + '</strong>. Type it here.</p>' +
+        '<form id="code" class="rise d4" style="margin-top:24px"><label class="field"><span>Your code</span>' +
+        '<input class="input" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="8" required placeholder="123456" style="font-size:28px;letter-spacing:.3em;font-weight:600;text-align:center"></label>' +
+        '<button class="btn press" style="margin-top:16px" type="submit">Sign in</button></form>' +
+        '<div class="rise d5" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><button class="btn ghost press" data-action="resend-code">Send a new code</button><button class="btn ghost press" data-action="back-signin">Use a different email</button></div>' +
+        '<p class="tiny muted rise d5" style="margin-top:16px">You only do this once on each phone or computer. After that you stay signed in.</p>'
+      : '<p class="lede rise d3">Our calendar, money, kids, projects and photos, all in one place.</p><form id="signin" class="rise d4" style="margin-top:24px"><label class="field"><span>Your email</span><input class="input" type="email" name="email" autocomplete="email" required placeholder="you@example.com"></label><button class="btn press" style="margin-top:16px" type="submit">Email me a code</button></form><p class="tiny muted rise d5" style="margin-top:16px">No password. One code on each phone or computer, then you stay signed in.</p>') + '</div>';
 }
-ACTIONS['back-signin'] = () => { $app.innerHTML = viewSignIn(); wireSignIn(); };
+ACTIONS['back-signin'] = () => { setPending(null); $app.innerHTML = viewSignIn(); wireSignIn(); };
+ACTIONS['resend-code'] = async (el) => {
+  const email = pendingEmail(); if (!email) return ACTIONS['back-signin']();
+  el.disabled = true;
+  const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + '/WhiteHouse/' } });
+  el.disabled = false;
+  if (error) return toast(/rate|seconds/i.test(error.message) ? 'Give it a minute, then try again.' : 'That didn’t send. Try again in a minute.');
+  setPending(email); toast('New code sent.');
+};
 function wireSignIn() {
-  const f = document.getElementById('signin'); if (!f) return;
-  f.addEventListener('submit', async (e) => {
+  const f = document.getElementById('signin');
+  if (f) f.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = String(new FormData(f).get('email') || '').trim();
+    const email = String(new FormData(f).get('email') || '').trim().toLowerCase();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return toast('That email doesn’t look right.');
     const b = f.querySelector('button'); b.disabled = true;
     const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + '/WhiteHouse/' } });
     b.disabled = false;
-    if (error) return fail(error, 'send the link');
-    $app.innerHTML = viewSignIn(email);
+    if (error) return fail(error, 'send the code');
+    setPending(email);
+    $app.innerHTML = viewSignIn(email); wireSignIn();
   });
+  const c = document.getElementById('code');
+  if (c) {
+    const input = c.querySelector('input'), btn = c.querySelector('button[type=submit]');
+    let busy = false;
+    const go = async () => {
+      const token = input.value.replace(/\D/g, '');
+      const email = pendingEmail();
+      if (!email) return ACTIONS['back-signin']();
+      if (token.length < 6 || busy) return;
+      busy = true; btn.disabled = true;
+      const { error } = await sb.auth.verifyOtp({ email, token, type: 'email' });
+      busy = false; btn.disabled = false;
+      if (error) { input.select(); return toast('That code didn’t work. Check it, or send a new one.'); }
+      setPending(null); S.me = null; render();
+    };
+    c.addEventListener('submit', (e) => { e.preventDefault(); go(); });
+    let wait;
+    input.addEventListener('input', () => {
+      const d = input.value.replace(/\D/g, ''); if (d !== input.value) input.value = d;
+      clearTimeout(wait);
+      if (d.length === 8) go(); else if (d.length === 6) wait = setTimeout(go, 700);
+    });
+    setTimeout(() => input.focus(), 400);
+  }
 }
 function viewPrivate() {
   return '<div class="center"><div class="rise d1">' + icon.house + '</div><h1 class="rise d2">This house is private.</h1><p class="lede rise d3">You’re signed in as ' + esc(S.email || '') + ', which isn’t on the family list.</p><button class="btn ghost press rise d4" style="margin-top:24px" data-action="signout">Sign out</button></div>';
@@ -901,7 +949,7 @@ async function render() {
   const seq = ++renderSeq;
   const { data } = await sb.auth.getSession();
   const session = data && data.session;
-  if (!session) { S.me = null; $app.innerHTML = viewSignIn(); wireSignIn(); return; }
+  if (!session) { S.me = null; $app.innerHTML = viewSignIn(pendingEmail()); wireSignIn(); return; }
   S.email = session.user.email;
   if (!S.me) {
     const { data: key, error } = await sb.rpc('my_key');
